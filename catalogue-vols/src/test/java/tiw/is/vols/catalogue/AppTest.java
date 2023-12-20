@@ -6,6 +6,7 @@ import jakarta.persistence.Persistence;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import tiw.is.vols.catalogue.db.PersistenceManager;
 import tiw.is.vols.catalogue.modeles.Vol;
 
 import java.util.Arrays;
@@ -22,15 +23,7 @@ public class AppTest {
 
     @BeforeAll
     public static void setupClass() {
-        Map<String, Object> config = new HashMap<>();
-        config.put("hibernate.hbm2ddl.auto", "update");
-        config.put("jakarta.persistence.jdbc.url", "jdbc:postgresql:catalogue-db");
-        config.put("jakarta.persistence.jdbc.user", "catalogue");
-        config.put("jakarta.persistence.jdbc.password", "catalogue-mdp");
-        config.put("hibernate.dialect", org.hibernate.dialect.PostgreSQLDialect.class.getCanonicalName());
-        config.put("hibernate.hbm2ddl.auto", "create");
-        emf = Persistence
-                .createEntityManagerFactory("pu-catalogue", config);
+        emf = PersistenceManager.createEntityManagerFactory();
     }
 
     @AfterAll
