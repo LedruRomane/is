@@ -14,7 +14,6 @@ public class PersistenceManager {
         config.put("jakarta.persistence.jdbc.url", "jdbc:postgresql:catalogue-db");
         config.put("jakarta.persistence.jdbc.user", "catalogue");
         config.put("jakarta.persistence.jdbc.password", "catalogue-mdp");
-//        config.put("hibernate.dialect", org.hibernate.dialect.PostgreSQLDialect.class.getCanonicalName());
         config.put("hibernate.hbm2ddl.auto", "create");
         return Persistence
                 .createEntityManagerFactory("pu-catalogue", config);

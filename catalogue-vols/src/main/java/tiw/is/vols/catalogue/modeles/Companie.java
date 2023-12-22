@@ -1,26 +1,20 @@
 package tiw.is.vols.catalogue.modeles;
 
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
 
 import java.util.Objects;
 
 @Entity
-public class Vol {
+public class Companie {
     @Id
     private String id;
 
-    @ManyToOne
-    private Companie companie;
-
-    public Vol() {
+    public Companie() {
     }
 
-    public Vol(String id, Companie companie) {
+    public Companie(String id) {
         this.id = id;
-        this.companie = companie;
     }
 
     public String getId() {
@@ -31,20 +25,12 @@ public class Vol {
         this.id = id;
     }
 
-    public Companie getCompanie() {
-        return companie;
-    }
-
-    public void setCompanie(Companie companie) {
-        this.companie = companie;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Vol vol = (Vol) o;
-        return Objects.equals(id, vol.id);
+        Companie companie = (Companie) o;
+        return Objects.equals(id, companie.id);
     }
 
     @Override
