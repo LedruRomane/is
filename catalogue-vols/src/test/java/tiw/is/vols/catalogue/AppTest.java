@@ -35,7 +35,7 @@ public class AppTest {
     public void testEMSetup() {
         EntityManager em = emf.createEntityManager();
         Companie c = new Companie("c-testEMSetup");
-        Vol v = new Vol("vol-in-testEMSetup", c);
+        Vol v = new Vol("vol-in-testEMSetup", c, true, "a");
         em.getTransaction().begin();
         em.persist(c);
         em.persist(v);
@@ -55,9 +55,9 @@ public class AppTest {
     public void testListVols() {
         EntityManager em = emf.createEntityManager();
         Companie c = new Companie("c-testListVols");
-        Vol v1 = new Vol("vol-in-testListVols1",c);
-        Vol v2 = new Vol("vol-in-testListVols2",c);
-        Vol v3 = new Vol("vol-in-testListVols3",c);
+        Vol v1 = new Vol("vol-in-testListVols1",c, true, "b");
+        Vol v2 = new Vol("vol-in-testListVols2",c, true, "c");
+        Vol v3 = new Vol("vol-in-testListVols3",c, true, "d");
         em.getTransaction().begin();
         em.persist(c);
         em.persist(v1);
@@ -88,7 +88,7 @@ public class AppTest {
         em.persist(c);
         em.getTransaction().commit();
         Catalogue cat = new Catalogue(em);
-        Vol v = new Vol("vol-in-testSaveVol", c);
+        Vol v = new Vol("vol-in-testSaveVol", c, false, "e");
         em.getTransaction().begin();
         cat.saveVol(v);
         em.getTransaction().commit();
