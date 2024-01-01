@@ -99,4 +99,27 @@ public class AppTest {
         em.remove(em.find(Companie.class, c.getId()));
         em.getTransaction().commit();
     }
+
+    /**
+     * Test de suppression d'un vol en base
+     */
+    @Test
+    public void testDeleteVolById() {
+        EntityManager em = emf.createEntityManager();
+        Companie c = new Companie("c-testDeleteVolById");
+        Vol v = new Vol("vol-in-testDeleteVolById", c, false, "f");
+        em.getTransaction().begin();
+        em.persist(c);
+        em.persist(v);
+        em.getTransaction().commit();
+        Catalogue cat = new Catalogue(em);
+        em.getTransaction().begin();
+        cat.deleteVolById(v.getId());
+        em.getTransaction().commit();
+        em.getTransaction().begin();
+        Vol v2 = em.find(Vol.class, v.getId());
+        assertNull(v2);
+        em.remove(em.find(Companie.class, c.getId()));
+        em.getTransaction().commit();
+    }
 }
