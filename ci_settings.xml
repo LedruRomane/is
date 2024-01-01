@@ -4,12 +4,25 @@
                               https://maven.apache.org/xsd/settings-1.0.0.xsd">
     <proxies>
         <proxy>
-            <id>example-proxy</id>
+            <id>proxy</id>
             <active>true</active>
             <protocol>http</protocol>
             <host>proxy.univ-lyon1.fr</host>
             <port>3128</port>
-            <nonProxyHosts>localhost|127.0.0.1</nonProxyHosts>
+            <nonProxyHosts>localhost|127.0.0.1|postgres</nonProxyHosts>
         </proxy>
     </proxies>
+    <profiles>
+        <profile>
+            <id>ci-database</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <db.url>${env.DB_URL}</db.url>
+                <db.user>${env.POSTGRES_USER}</db.user>
+                <db.password>${env.POSTGRES_PASSWORD}</db.password>
+            </properties>
+        </profile>
+    </profiles>
 </settings>
