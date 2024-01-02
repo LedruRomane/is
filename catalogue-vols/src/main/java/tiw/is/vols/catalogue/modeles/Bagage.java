@@ -25,35 +25,12 @@ public class Bagage {
         this.passagerRef = passagerRef;
     }
 
-    public Vol getVol() {
-        return vol;
-    }
-
-    public void setVol(Vol vol) {
-        this.vol = vol;
-    }
-
-    public int getNumero() {
-        return numero;
-    }
-
-    public void setNumero(int numero) {
-        this.numero = numero;
-    }
-
     public double getPoids() {
         return poids;
-    }
-
-    public void setPoids(double poids) {
-        this.poids = poids;
     }
 
     public String getPassagerRef() {
         return passagerRef;
     }
 
-    public void setPassagerRef(String passagerRef) {
-        this.passagerRef = passagerRef;
-    }
 }

@@ -33,34 +33,6 @@ public class Vol {
         return id;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public Companie getCompanie() {
-        return companie;
-    }
-
-    public void setCompanie(Companie companie) {
-        this.companie = companie;
-    }
-
-    public boolean isDepart() {
-        return isDepart;
-    }
-
-    public void setDepart(boolean depart) {
-        isDepart = depart;
-    }
-
-    public String getPointLivraisonBagages() {
-        return pointLivraisonBagages;
-    }
-
-    public void setPointLivraisonBagages(String pointLivraisonBagages) {
-        this.pointLivraisonBagages = pointLivraisonBagages;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

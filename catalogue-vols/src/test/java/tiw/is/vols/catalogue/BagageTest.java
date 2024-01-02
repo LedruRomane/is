@@ -56,4 +56,16 @@ public class BagageTest {
         Bagage b = c.getBagageById("vol1", 1);
         assertNull(b);
     }
+
+    @Test
+    public void testCreateBagage() {
+        Catalogue c = new Catalogue(emf.createEntityManager());
+
+        BagageKey b2Key = new BagageKey(c.getVol("vol1"), 2);
+        c.createBagage(b2Key, 20, "passager2");
+
+        Bagage b = c.getBagageById("vol1", 2);
+        assertEquals(20, b.getPoids());
+        assertEquals("passager2", b.getPassagerRef());
+    }
 }
