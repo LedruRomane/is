@@ -2,6 +2,8 @@ package tiw.is.vols.catalogue;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.criteria.CriteriaBuilder;
+import tiw.is.vols.catalogue.modeles.Bagage;
+import tiw.is.vols.catalogue.modeles.BagageKey;
 import tiw.is.vols.catalogue.modeles.Companie;
 import tiw.is.vols.catalogue.modeles.Vol;
 
@@ -122,6 +124,26 @@ public class Catalogue {
         Companie c = em.find(Companie.class, id);
         if (c != null) {
             em.remove(c);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    Bagage createBagage(BagageKey bagageKey, double poids, String passagerRef) {
+        Bagage b = new Bagage(bagageKey, poids, passagerRef);
+        em.persist(b);
+        return b;
+    }
+
+    Bagage getBagageById(String volId, int number) {
+        return em.find(Bagage.class, new BagageKey(getVol(volId), number));
+    }
+
+    boolean deleteBagageById(String volId, int number) {
+        Bagage b = getBagageById(volId, number);
+        if (b != null) {
+            em.remove(b);
             return true;
         } else {
             return false;
