@@ -31,6 +31,15 @@ public class BagageTest {
         em.getTransaction().commit();
     }
 
+    public static void pruneFixtures() {
+        EntityManager em = emf.createEntityManager();
+        em.getTransaction().begin();
+        em.remove(em.find(Bagage.class, new BagageKey(em.find(Vol.class, "vol1"), 1)));
+        em.remove(em.find(Vol.class, "vol1"));
+        em.remove(em.find(Companie.class, "Compagnie A"));
+        em.getTransaction().commit();
+    }
+
     @BeforeAll
     public static void setupClass() {
         emf = PersistenceManager.createEntityManagerFactory();
@@ -38,6 +47,7 @@ public class BagageTest {
     }
     @AfterAll
     public static void tearDownClass() {
+        pruneFixtures();
         emf.close();
     }
 
