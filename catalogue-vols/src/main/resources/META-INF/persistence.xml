@@ -5,12 +5,4 @@
 
     <persistence-unit name="pu-catalogue">
     </persistence-unit>
-
-    <persistence-unit name="pu-vol" transaction-type="RESOURCE_LOCAL">
-        <properties>
-            <property name="jakarta.persistence.jdbc.url" value="jdbc:postgresql:catalogue-db"/>
-            <property name="jakarta.persistence.jdbc.user" value="catalogue"/>
-            <property name="jakarta.persistence.jdbc.password" value="catalogue-mdp"/>
-        </properties>
-    </persistence-unit>
 </persistence>
