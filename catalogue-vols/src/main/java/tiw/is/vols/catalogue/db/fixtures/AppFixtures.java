@@ -20,10 +20,10 @@ public class AppFixtures {
                 em.createQuery("DELETE FROM Companie").executeUpdate();
                 em.getTransaction().commit();
             } catch (Exception e) {
-                throw new Exception("Erreur lors du reset de la base de données");
+                throw new Exception(e + "[custom message] : Erreur lors du reset de la base de données");
             }
         } catch (Exception e) {
-            throw new Exception("Erreur lors du reset de la base de données");
+            throw new Exception(e + "[custom message] : Erreur lors du reset de la base de données");
         }
     }
 

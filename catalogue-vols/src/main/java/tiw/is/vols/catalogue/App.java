@@ -1,7 +1,6 @@
 package tiw.is.vols.catalogue;
 
 import org.apache.catalina.Context;
-import org.apache.catalina.LifecycleException;
 import org.apache.catalina.startup.Tomcat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,7 +9,6 @@ import tiw.is.vols.catalogue.servlet.ServletRacine;
 import tiw.is.vols.catalogue.servlet.VolServlet;
 
 import java.io.File;
-import java.io.IOException;
 
 /**
  * Hello world!
@@ -38,7 +36,6 @@ public class App
 
         Tomcat.addServlet(ctx, "VolS", new VolServlet());
         ctx.addServletMappingDecoded("/vol/*", "VolS");
-
 
         log.info("Tomcat start...");
         tomcat.start();
