@@ -6,10 +6,23 @@ import tiw.is.vols.livraison.exception.ResourceNotFoundException;
 import tiw.is.vols.livraison.model.Compagnie;
 
 import java.util.Collection;
+import java.util.Map;
 import java.util.Optional;
 
 public class CompagnieOperationController {
     private final CatalogueCompanie dao;
+
+    public Object process(String command,  Map<String, Object> params ) throws ResourceAlreadyExistsException {
+        switch (command){
+            case "createCompagnie":
+                Compagnie compagnie = new Compagnie((String) params.get("id"));
+                createCompagnie(compagnie);
+
+                return compagnie.getId();
+        }
+
+        throw new RuntimeException("Command does not exists");
+    }
 
     /**
      * Créée une instance du contrôleur qui utilisera le DAO passé
@@ -48,11 +61,11 @@ public class CompagnieOperationController {
      * @param compagnie la compagnie à persister
      * @throws ResourceAlreadyExistsException si une compagnie avec le même id existe déjà
      */
-    public Compagnie createCompagnie(Compagnie compagnie) throws ResourceAlreadyExistsException {
+    public void createCompagnie(Compagnie compagnie) throws ResourceAlreadyExistsException {
         if (dao.getCompagnie(compagnie.getId()) != null)
             throw new ResourceAlreadyExistsException("Une compagnie avec l'ID " + compagnie.getId() + " existe déjà.");
         dao.saveCompagnie(compagnie);
-        return compagnie;
+        //todo: ask how do I put this in private with unit tests using it...
     }
 
     /**

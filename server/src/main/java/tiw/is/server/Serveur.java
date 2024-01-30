@@ -21,6 +21,6 @@ todo:
 */
 
 public interface Serveur {
-    public Object processRequest(String command, Map<Integer, String> params) throws SQLException, IOException, ResourceAlreadyExistsException, ResourceNotFoundException;
+    public Object processRequest(String command, Map<String, Object> params) throws SQLException, IOException, ResourceAlreadyExistsException, ResourceNotFoundException;
 }
 

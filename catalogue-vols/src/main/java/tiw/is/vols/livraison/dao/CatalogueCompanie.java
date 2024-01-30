@@ -108,5 +108,4 @@ public class CatalogueCompanie {
             em.remove(b);
         }
     }
-
 }

@@ -13,6 +13,8 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 
 public class ServeurTest {
     private static ServeurImpl serveurImpl;
@@ -28,18 +30,15 @@ public class ServeurTest {
     }
 
     @Test
-    public void CreateCompagie() throws IOException, ResourceAlreadyExistsException {
-        String command = "createCompagnies";
+    public void CreateCompagnie() throws IOException, ResourceAlreadyExistsException {
 
-        String json1 = "{\"id\":\"compagnie1\"}";
-        String json2 = "{\"id\":\"compagnie2\"}";
-
-        Map<Integer, String> params = new HashMap<>();
-        params.put(1, json1);
-        params.put(2, json2);
+        String command = "createCompagnie";
+        Map<String, Object> params = new HashMap<>();
+        params.put("id", "compagnie1");
 
         String result = (String) serveurImpl.processRequest(command, params);
-        assert result.contains("compagnie1");
-        assert result.contains("compagnie2");
+        assertSame("compagnie1", result);
+
+        //todo: ask if I assert the item was correctly created in database ?
     }
 }
