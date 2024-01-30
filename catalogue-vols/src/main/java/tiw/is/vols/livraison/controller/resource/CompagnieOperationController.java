@@ -48,10 +48,11 @@ public class CompagnieOperationController {
      * @param compagnie la compagnie à persister
      * @throws ResourceAlreadyExistsException si une compagnie avec le même id existe déjà
      */
-    public void createCompagnie(Compagnie compagnie) throws ResourceAlreadyExistsException {
+    public Compagnie createCompagnie(Compagnie compagnie) throws ResourceAlreadyExistsException {
         if (dao.getCompagnie(compagnie.getId()) != null)
             throw new ResourceAlreadyExistsException("Une compagnie avec l'ID " + compagnie.getId() + " existe déjà.");
         dao.saveCompagnie(compagnie);
+        return compagnie;
     }
 
     /**
