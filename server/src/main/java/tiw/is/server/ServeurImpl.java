@@ -4,70 +4,65 @@ import jakarta.persistence.EntityManager;
 import org.picocontainer.MutablePicoContainer;
 import org.picocontainer.PicoBuilder;
 import org.picocontainer.injectors.ConstructorInjection;
+import tiw.is.server.command.company.CreateCompanyCommand;
+import tiw.is.server.commandBus.CommandBus;
+import tiw.is.server.commandBus.HandlerInterface;
+import tiw.is.server.handler.company.CreateCompanyCommandHandler;
 import tiw.is.server.utils.JsonFormatter;
-import tiw.is.vols.livraison.controller.resource.CompagnieOperationController;
-import tiw.is.vols.livraison.dao.CatalogueCompanie;
+import tiw.is.vols.livraison.controller.resource.CompanyOperationController;
+import tiw.is.vols.livraison.dao.CatalogCompany;
 import tiw.is.vols.livraison.db.PersistenceManager;
-import tiw.is.vols.livraison.exception.ResourceAlreadyExistsException;
-import tiw.is.vols.livraison.model.Compagnie;
+import tiw.is.vols.livraison.model.Company;
 
-import java.io.IOException;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ServeurImpl implements Serveur {
 
     private final MutablePicoContainer picoContainer;
 
-    private static JsonFormatter<Compagnie> compagnieFormatter;
+    private static JsonFormatter<Company> companyFormatter;
 
-    public ServeurImpl() throws SQLException {
+    public ServeurImpl() {
 
         this.picoContainer = new PicoBuilder(new ConstructorInjection()).withCaching().build();
 
         EntityManager em = PersistenceManager.createEntityManagerFactory().createEntityManager();
-
         picoContainer.addComponent(em);
-        picoContainer.addComponent(CatalogueCompanie.class);
-        picoContainer.addComponent(CompagnieOperationController.class);
 
-        compagnieFormatter = new JsonFormatter<>();
+        picoContainer.addComponent(CatalogCompany.class);
+        picoContainer.addComponent(CompanyOperationController.class);
+        picoContainer.addComponent(CreateCompanyCommandHandler.class);
+
+        Map<Class, HandlerInterface> handlerLocator = new HashMap<>();
+
+        handlerLocator.put(CreateCompanyCommand.class, picoContainer.getComponent(CreateCompanyCommandHandler.class));
+
+        CommandBus cm = new CommandBus(handlerLocator, em);
+
+        picoContainer.addComponent(cm);
+
+        companyFormatter = new JsonFormatter<>();
     }
 
-    private CompagnieOperationController getCompagnieOperationController() {
-        return picoContainer.getComponent(CompagnieOperationController.class);
+    private CommandBus getCommandBus() {
+        return picoContainer.getComponent(CommandBus.class);
     }
 
-    private EntityManager getEntityManager() {
-        return picoContainer.getComponent(EntityManager.class);
-    }
-
-    private CatalogueCompanie getCatalogueCompanie() {
-
-        return picoContainer.getComponent(CatalogueCompanie.class);
-    }
-
-    public MutablePicoContainer getPicoContainer() {
-        return picoContainer;
-    }
-
-    public Object processRequest(String command, Map<String, Object> params) throws IOException, ResourceAlreadyExistsException {
-        getEntityManager().getTransaction().begin();
+    public Object processRequest(String command, Map<String, Object> params) {
         try {
-            return switch (command) {
-                case "createCompagnie",
-                        "getCompagnies",
-                        "getCompagnie",
-                        "deleteCompagnie" -> getCompagnieOperationController().process(command, params);
-                default -> "Command doesn't exist";
-            };
+            switch (command) {
+                case "createCompany" :
+                    Object data = this.getCommandBus().handle(new CreateCompanyCommand((String) params.get("id")));
+                    return companyFormatter.serializeObject(data);
+                case "deleteCompany":
+                    //todo: delete company
+                // etc.
+                default:
+                    return "Command doesn't exist";
+            }
         } catch (Exception e){
-            getEntityManager().getTransaction().rollback();
-            throw e;
-        } finally {
-            getEntityManager().getTransaction().commit();
+            return "KO";
         }
     }
 }

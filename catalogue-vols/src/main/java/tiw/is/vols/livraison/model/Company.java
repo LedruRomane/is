@@ -8,16 +8,16 @@ import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
-public class Compagnie implements Serializable {
+public class Company implements Serializable {
     @Serial
     private static final long serialVersionUID = 3885491406861965219L;
     @Id
     private String id;
 
-    public Compagnie() {
+    public Company() {
     }
 
-    public Compagnie(String id) {
+    public Company(String id) {
         this.id = id;
     }
 
@@ -33,8 +33,8 @@ public class Compagnie implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Compagnie compagnie = (Compagnie) o;
-        return Objects.equals(id, compagnie.id);
+        Company company = (Company) o;
+        return Objects.equals(id, company.id);
     }
 
     @Override

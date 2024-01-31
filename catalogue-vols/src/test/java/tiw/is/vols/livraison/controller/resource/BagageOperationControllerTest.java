@@ -7,7 +7,7 @@ import tiw.is.vols.livraison.dao.CatalogueTest;
 import tiw.is.vols.livraison.dto.BagageDTO;
 import tiw.is.vols.livraison.exception.ResourceNotFoundException;
 import tiw.is.vols.livraison.model.Bagage;
-import tiw.is.vols.livraison.model.Compagnie;
+import tiw.is.vols.livraison.model.Company;
 import tiw.is.vols.livraison.model.Vol;
 
 import java.util.Arrays;
@@ -52,7 +52,7 @@ public class BagageOperationControllerTest extends CatalogueTest {
     @Test
     public void createBagage() {
         try {
-            catalogueVol.saveVol(new Vol(dumbBagage.volId(), catalogueCompanie.saveCompagnie(new Compagnie("ALF Inc.")), "Jupiter"));
+            catalogueVol.saveVol(new Vol(dumbBagage.volId(), catalogCompany.saveCompany(new Company("ALF Inc.")), "Jupiter"));
             BagageDTO res = controller.createBagage(dumbBagage);
             assertNotNull(catalogueBagage.getBagageById(dumbBagage.volId(), res.numero()));
             assertEquals(dumbBagage.volId(), res.volId());

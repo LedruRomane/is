@@ -6,7 +6,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import tiw.is.vols.livraison.dao.CatalogueVol;
-import tiw.is.vols.livraison.model.Compagnie;
+import tiw.is.vols.livraison.model.Company;
 import tiw.is.vols.livraison.model.Vol;
 
 import java.util.Arrays;
@@ -34,7 +34,7 @@ public class PersistenceManagerTest {
     @Test
     public void testEMSetup() {
         EntityManager em = emf.createEntityManager();
-        Compagnie c = new Compagnie("c-testEMSetup");
+        Company c = new Company("c-testEMSetup");
         Vol v = new Vol("vol-in-testEMSetup", c, "a");
         em.getTransaction().begin();
         em.persist(c);
@@ -44,7 +44,7 @@ public class PersistenceManagerTest {
         Vol v2 = em.find(Vol.class, v.getId());
         assertEquals(v, v2);
         em.remove(v2);
-        em.remove(em.find(Compagnie.class, c.getId()));
+        em.remove(em.find(Company.class, c.getId()));
         em.getTransaction().commit();
     }
 
@@ -54,7 +54,7 @@ public class PersistenceManagerTest {
     @Test
     public void testListVols() {
         EntityManager em = emf.createEntityManager();
-        Compagnie c = new Compagnie("c-testListVols");
+        Company c = new Company("c-testListVols");
         Vol v1 = new Vol("vol-in-testListVols1",c, "b");
         Vol v2 = new Vol("vol-in-testListVols2",c, "c");
         Vol v3 = new Vol("vol-in-testListVols3",c, "d");
@@ -83,7 +83,7 @@ public class PersistenceManagerTest {
     @Test
     public void testSaveVol() {
         EntityManager em = emf.createEntityManager();
-        Compagnie c = new Compagnie("c-testSaveVol");
+        Company c = new Company("c-testSaveVol");
         em.getTransaction().begin();
         em.persist(c);
         em.getTransaction().commit();
@@ -96,7 +96,7 @@ public class PersistenceManagerTest {
         Vol v2 = em.find(Vol.class,v.getId());
         assertNotNull(v2);
         em.remove(v2);
-        em.remove(em.find(Compagnie.class, c.getId()));
+        em.remove(em.find(Company.class, c.getId()));
         em.getTransaction().commit();
     }
 }

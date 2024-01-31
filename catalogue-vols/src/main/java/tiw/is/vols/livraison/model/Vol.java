@@ -17,7 +17,7 @@ public class Vol implements Serializable {
     private String id;
 
     @ManyToOne
-    private Compagnie compagnie;
+    private Company company;
 
     private String pointLivraisonBagages;
 
@@ -27,9 +27,9 @@ public class Vol implements Serializable {
     public Vol() {
     }
 
-    public Vol(String id, Compagnie compagnie, String pointLivraisonBagages) {
+    public Vol(String id, Company company, String pointLivraisonBagages) {
         this.id = id;
-        this.compagnie = compagnie;
+        this.company = company;
         this.pointLivraisonBagages = pointLivraisonBagages;
         this.nextNumeroBagage = 1;
         this.livraisonEnCours = true;
@@ -43,12 +43,12 @@ public class Vol implements Serializable {
         this.id = id;
     }
 
-    public Compagnie getCompagnie() {
-        return compagnie;
+    public Company getCompany() {
+        return company;
     }
 
-    public void setCompagnie(Compagnie compagnie) {
-        this.compagnie = compagnie;
+    public void setCompany(Company company) {
+        this.company = company;
     }
 
     public String getPointLivraisonBagages() {

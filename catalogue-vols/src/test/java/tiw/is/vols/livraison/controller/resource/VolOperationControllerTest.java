@@ -6,7 +6,7 @@ import org.junit.jupiter.api.TestInfo;
 import tiw.is.vols.livraison.dao.CatalogueTest;
 import tiw.is.vols.livraison.dto.VolDTO;
 import tiw.is.vols.livraison.exception.ResourceNotFoundException;
-import tiw.is.vols.livraison.model.Compagnie;
+import tiw.is.vols.livraison.model.Company;
 import tiw.is.vols.livraison.model.Vol;
 
 import java.util.Arrays;
@@ -20,14 +20,14 @@ public class VolOperationControllerTest extends CatalogueTest {
     @BeforeEach
     public void setup(TestInfo testInfo) {
         super.setup(testInfo);
-        controller = new VolOperationController(catalogueVol, catalogueCompanie);
+        controller = new VolOperationController(catalogueVol, catalogCompany);
     }
 
     @Test
     public void getVols() {
         Collection<VolDTO> vols1 = controller.getVols();
         for(VolDTO v: vols1) {
-            assertTrue(Arrays.stream(vols).toList().contains(new Vol(v.id(), catalogueCompanie.getCompagnie(v.compagnie()), v.pointLivraisonBagages())));
+            assertTrue(Arrays.stream(vols).toList().contains(new Vol(v.id(), catalogCompany.getCompany(v.company()), v.pointLivraisonBagages())));
         }
         for(Vol v: vols) {
             assertTrue(vols1.contains(VolDTO.fromVol(v)));
@@ -46,7 +46,7 @@ public class VolOperationControllerTest extends CatalogueTest {
 
     @Test
     public void createVol() {
-        catalogueCompanie.saveCompagnie(new Compagnie(dumbVol.compagnie()));
+        catalogCompany.saveCompany(new Company(dumbVol.company()));
         try {
             controller.updateVol(dumbVol);
             assertNotNull(catalogueVol.getVol(dumbVol.id()));
@@ -58,7 +58,7 @@ public class VolOperationControllerTest extends CatalogueTest {
     @Test
     public void updateVol() {
         String nouveauPointLivraison = "Pétaouchnok";
-        VolDTO dto = new VolDTO(vols[0].getId(), compagnies[0].getId(), nouveauPointLivraison);
+        VolDTO dto = new VolDTO(vols[0].getId(), companies[0].getId(), nouveauPointLivraison);
         try {
             controller.updateVol(dto);
             assertEquals(catalogueVol.getVol(vols[0].getId()).getPointLivraisonBagages(), nouveauPointLivraison);

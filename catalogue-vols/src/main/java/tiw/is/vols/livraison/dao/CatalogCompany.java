@@ -3,12 +3,12 @@ package tiw.is.vols.livraison.dao;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import tiw.is.vols.livraison.model.Bagage;
-import tiw.is.vols.livraison.model.Compagnie;
+import tiw.is.vols.livraison.model.Company;
 import tiw.is.vols.livraison.model.Vol;
 
 import java.util.Collection;
 
-public class CatalogueCompanie {
+public class CatalogCompany {
 
     private final EntityManager em;
 
@@ -18,7 +18,7 @@ public class CatalogueCompanie {
      *
      * @param em l'entity manager en charge de la gestion des objets
      */
-    public CatalogueCompanie(EntityManager em) {
+    public CatalogCompany(EntityManager em) {
         this.em = em;
     }
 
@@ -27,10 +27,10 @@ public class CatalogueCompanie {
      *
      * @return toutes les compagnies
      */
-    public Collection<Compagnie> getCompagnies() {
+    public Collection<Company> getCompanies() {
         CriteriaBuilder cb = em.getCriteriaBuilder();
-        var q = cb.createQuery(Compagnie.class);
-        var r = q.from(Compagnie.class);
+        var q = cb.createQuery(Company.class);
+        var r = q.from(Company.class);
         return em.createQuery(q.select(r)).getResultList();
     }
 
@@ -40,8 +40,8 @@ public class CatalogueCompanie {
      * @param id l'id de la compagnie cherchée
      * @return la compagnie trouvée ou null si aucune compagnie n'a été trouvée
      */
-    public Compagnie getCompagnie(String id) {
-        return em.find(Compagnie.class, id);
+    public Company getCompany(String id) {
+        return em.find(Company.class, id);
     }
 
     /**
@@ -51,11 +51,11 @@ public class CatalogueCompanie {
      * @return L'objet compagnie connu par le support de persistence. Doit
      * être equals() à l'objet c.
      */
-    public Compagnie saveCompagnie(Compagnie c) {
+    public Company saveCompany(Company c) {
         if (em.contains(c)) {
             return c;
         } else {
-            if (em.find(Compagnie.class, c.getId()) == null) {
+            if (em.find(Company.class, c.getId()) == null) {
                 em.persist(c);
                 return c;
             } else {
@@ -70,12 +70,12 @@ public class CatalogueCompanie {
      * @param id l'identifiant de la compagnie à supprimer.
      * @return true si la compagnie à été supprimée.
      */
-    public boolean deleteCompagnieById(String id) {
-        Compagnie c = em.find(Compagnie.class, id);
+    public boolean deleteCompanyById(String id) {
+        Company c = em.find(Company.class, id);
         if (c == null) {
             return false;
         } else {
-            deleteVolsByCompagnieId(id);
+            deleteVolsByCompanyId(id);
             em.remove(c);
             return true;
         }
@@ -85,12 +85,12 @@ public class CatalogueCompanie {
     /**
      * Supprime tous les vols rattachés à une compagnie
      *
-     * @param compagnieId l'id de la compagnie ciblée
+     * @param companyId l'id de la compagnie ciblée
      */
-    private void deleteVolsByCompagnieId(String compagnieId) {
-        deleteBagagesByCompagnieId(compagnieId);
-        var dq = em.createQuery("SELECT v FROM Vol v WHERE v.compagnie.id = :cId", Vol.class);
-        dq.setParameter("cId", compagnieId);
+    private void deleteVolsByCompanyId(String companyId) {
+        deleteBagagesByCompanyId(companyId);
+        var dq = em.createQuery("SELECT v FROM Vol v WHERE v.company.id = :cId", Vol.class);
+        dq.setParameter("cId", companyId);
         for(Vol v : dq.getResultList()) {
             em.remove(v);
         }
@@ -99,11 +99,11 @@ public class CatalogueCompanie {
     /**
      * Supprime tous les bagages rattachés à une compagnie.
      *
-     * @param compagnieId l'id de la compagnie ciblée
+     * @param companyId l'id de la compagnie ciblée
      */
-    private void deleteBagagesByCompagnieId(String compagnieId) {
-        var dq = em.createQuery("SELECT b FROM Bagage b WHERE b.vol.compagnie.id = :cId", Bagage.class);
-        dq.setParameter("cId", compagnieId);
+    private void deleteBagagesByCompanyId(String companyId) {
+        var dq = em.createQuery("SELECT b FROM Bagage b WHERE b.vol.company.id = :cId", Bagage.class);
+        dq.setParameter("cId", companyId);
         for(Bagage b : dq.getResultList()) {
             em.remove(b);
         }

@@ -1,16 +1,11 @@
 package tiw.is.server;
 
-import tiw.is.vols.livraison.exception.ResourceAlreadyExistsException;
-import tiw.is.vols.livraison.exception.ResourceNotFoundException;
-
-import java.io.IOException;
-import java.sql.SQLException;
 import java.util.Map;
 
 
 /*
 todo:
- 1- Créer des compagnies (à l'initialisation)
+ 1- Créer des company (à l'initialisation)
  2- Créer un vol à l'arrivée
  3- Ajouter un bagage à un vol
  4- Indiquer la livraison d'un bagage
@@ -21,6 +16,6 @@ todo:
 */
 
 public interface Serveur {
-    public Object processRequest(String command, Map<String, Object> params) throws SQLException, IOException, ResourceAlreadyExistsException, ResourceNotFoundException;
+    public Object processRequest(String command, Map<String, Object> params);
 }
 

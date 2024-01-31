@@ -1,7 +1,7 @@
 package tiw.is.vols.livraison.dao;
 
 import org.junit.jupiter.api.*;
-import tiw.is.vols.livraison.model.Compagnie;
+import tiw.is.vols.livraison.model.Company;
 import tiw.is.vols.livraison.model.Vol;
 
 import java.util.Collection;
@@ -15,7 +15,7 @@ class CatalogueVolTest extends CatalogueTest {
      */
     @Test
     void testEMSetup() {
-        Compagnie c = new Compagnie("c-testEMSetup");
+        Company c = new Company("c-testEMSetup");
         Vol v = new Vol("vol-in-testEMSetup", c, "a");
         em.getTransaction().begin();
         em.persist(c);
@@ -25,7 +25,7 @@ class CatalogueVolTest extends CatalogueTest {
         Vol v2 = em.find(Vol.class, v.getId());
         assertEquals(v, v2);
         em.remove(v2);
-        em.remove(em.find(Compagnie.class, c.getId()));
+        em.remove(em.find(Company.class, c.getId()));
         em.getTransaction().commit();
     }
 
@@ -51,7 +51,7 @@ class CatalogueVolTest extends CatalogueTest {
      */
     @Test
     void saveVol() {
-        Compagnie c = compagnies[0];
+        Company c = companies[0];
         Vol v = new Vol("vol-in-"+testName, c, "e");
         em.getTransaction().begin();
         assertEquals(v, catalogueVol.saveVol(v));

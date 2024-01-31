@@ -5,7 +5,7 @@ import jakarta.persistence.EntityManagerFactory;
 import org.junit.jupiter.api.*;
 import tiw.is.vols.livraison.db.PersistenceManager;
 import tiw.is.vols.livraison.model.Bagage;
-import tiw.is.vols.livraison.model.Compagnie;
+import tiw.is.vols.livraison.model.Company;
 import tiw.is.vols.livraison.model.Vol;
 
 import java.util.stream.IntStream;
@@ -13,11 +13,11 @@ import java.util.stream.IntStream;
 public abstract class CatalogueTest {
     private static EntityManagerFactory emf;
     protected EntityManager em;
-    protected CatalogueCompanie catalogueCompanie;
+    protected CatalogCompany catalogCompany;
     protected CatalogueVol catalogueVol;
     protected CatalogueBagage catalogueBagage;
     protected String testName;
-    protected Compagnie[] compagnies;
+    protected Company[] companies;
     protected Vol[] vols;
     protected Bagage[] bagages;
 
@@ -35,7 +35,7 @@ public abstract class CatalogueTest {
     public void setup(TestInfo testInfo) {
         testName = testInfo.getDisplayName();
         em = emf.createEntityManager();
-        catalogueCompanie = new CatalogueCompanie(em);
+        catalogCompany = new CatalogCompany(em);
         catalogueVol =  new CatalogueVol(em);
         catalogueBagage = new CatalogueBagage(em,catalogueVol);
         initData();
@@ -43,16 +43,16 @@ public abstract class CatalogueTest {
     }
 
     protected void initData() {
-        int nb_compagnies = 8;
-        compagnies = IntStream.range(0, nb_compagnies)
-                .mapToObj(i -> new Compagnie("c-" + testName + "-" + i))
-                .toArray(Compagnie[]::new);
-        vols = IntStream.range(0, nb_compagnies)
+        int nb_companies = 8;
+        companies = IntStream.range(0, nb_companies)
+                .mapToObj(i -> new Company("c-" + testName + "-" + i))
+                .toArray(Company[]::new);
+        vols = IntStream.range(0, nb_companies)
                 .boxed()
                 .flatMap(i -> IntStream.range(0, i + 1)
                         .mapToObj(j -> new Vol(
                                 "v-" + testName + "-" + i + "-" + j,
-                                compagnies[i],
+                                companies[i],
                                 "livraison" + "-" + i + "-" + j)))
                 .toArray(Vol[]::new);
         bagages = IntStream.range(0, vols.length)
@@ -75,7 +75,7 @@ public abstract class CatalogueTest {
 
     protected void persistData() {
         em.getTransaction().begin();
-        for (Compagnie c : compagnies) {
+        for (Company c : companies) {
             em.persist(c);
         }
         for (Vol v : vols) {
@@ -110,13 +110,13 @@ public abstract class CatalogueTest {
         }
         em.getTransaction().commit();
         em.getTransaction().begin();
-        for (Compagnie c : compagnies) {
+        for (Company c : companies) {
             if (em.contains(c)) {
                 em.remove(c);
             }
         }
         em.getTransaction().commit();
         vols = null;
-        compagnies = null;
+        companies = null;
     }
 }

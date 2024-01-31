@@ -1,10 +1,10 @@
 package tiw.is.vols.livraison.controller.resource;
 
-import tiw.is.vols.livraison.dao.CatalogueCompanie;
+import tiw.is.vols.livraison.dao.CatalogCompany;
 import tiw.is.vols.livraison.dao.CatalogueVol;
 import tiw.is.vols.livraison.dto.VolDTO;
 import tiw.is.vols.livraison.exception.ResourceNotFoundException;
-import tiw.is.vols.livraison.model.Compagnie;
+import tiw.is.vols.livraison.model.Company;
 import tiw.is.vols.livraison.model.Vol;
 
 import java.util.Collection;
@@ -12,7 +12,7 @@ import java.util.Optional;
 
 public class VolOperationController {
     private final CatalogueVol dao;
-    private final CatalogueCompanie daoCompanie;
+    private final CatalogCompany daoCompanie;
 
     /**
      * Créée une instance du contrôleur qui utilisera le DAO passé
@@ -22,7 +22,7 @@ public class VolOperationController {
      * @param daoCompanie le DAO en charge des objets Companie
      */
     public VolOperationController(CatalogueVol dao,
-                                  CatalogueCompanie daoCompanie) {
+                                  CatalogCompany daoCompanie) {
         this.dao = dao;
         this.daoCompanie = daoCompanie;
     }
@@ -56,10 +56,10 @@ public class VolOperationController {
      * @param voldto le DTO du vol à sauvegarder
      */
     public void updateVol(VolDTO voldto) throws ResourceNotFoundException {
-        Compagnie compagnie = Optional.ofNullable(daoCompanie.getCompagnie(voldto.compagnie())).orElseThrow(
-                () -> new ResourceNotFoundException("La compagnie " + voldto.compagnie() + " n'existe pas.")
+        Company company = Optional.ofNullable(daoCompanie.getCompany(voldto.company())).orElseThrow(
+                () -> new ResourceNotFoundException("La compagnie " + voldto.company() + " n'existe pas.")
         );
-        dao.saveVol(new Vol(voldto.id(), compagnie, voldto.pointLivraisonBagages()));
+        dao.saveVol(new Vol(voldto.id(), company, voldto.pointLivraisonBagages()));
     }
 
     /**
