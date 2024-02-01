@@ -1,4 +1,5 @@
 *.iml
 .idea
 target
-/ReportAggregator/
+tomcat.8080
+.envrc
