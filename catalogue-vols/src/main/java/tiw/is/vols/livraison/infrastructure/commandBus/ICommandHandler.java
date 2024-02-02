@@ -1,4 +1,6 @@
-package tiw.is.server.commandBus;
+package tiw.is.vols.livraison.infrastructure.commandBus;
+
+import tiw.is.vols.livraison.dao.IDataAccessObject;
 
 /**
  * @param <R> type of return value (Company, Bagage, or Collections, boolean, etc.)

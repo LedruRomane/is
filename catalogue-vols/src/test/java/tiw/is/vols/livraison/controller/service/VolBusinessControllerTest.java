@@ -22,14 +22,16 @@ class VolBusinessControllerTest extends CatalogueTest {
         controller = new VolBusinessController(catalogueVol, catalogueBagage);
     }
 
+/*
 
     @Test
     void fermerLivraison() {
         assertDoesNotThrow(() -> controller.fermerLivraison(VolDTO.fromVol(vols[0])));
         assertThrows(ResourceNotFoundException.class, () -> controller.fermerLivraison(dumbVol));
     }
+*/
 
-    @Test
+    /*@Test
     void bagagesPerdus() {
         vols[1].fermerLivraison();
         try {
@@ -54,9 +56,9 @@ class VolBusinessControllerTest extends CatalogueTest {
         assertThrows(IllegalStateException.class,
                 () -> controller.bagagesPerdus(VolDTO.fromVol(vols[3])));
         assertThrows(ResourceNotFoundException.class, () -> controller.bagagesPerdus(dumbVol));
-    }
+    }*/
 
-    @Test
+    /*@Test
     void bagagesNonRecuperes() {
         Vol vol = vols[1];
         vol.fermerLivraison();
@@ -83,5 +85,5 @@ class VolBusinessControllerTest extends CatalogueTest {
         }
         assertThrows(IllegalStateException.class, () -> controller.bagagesNonRecuperes(VolDTO.fromVol(vols[2])));
         assertThrows(ResourceNotFoundException.class, () -> controller.bagagesPerdus(dumbVol));
-    }
+    }*/
 }

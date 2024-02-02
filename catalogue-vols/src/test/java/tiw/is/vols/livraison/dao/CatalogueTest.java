@@ -13,7 +13,7 @@ import java.util.stream.IntStream;
 public abstract class CatalogueTest {
     private static EntityManagerFactory emf;
     protected EntityManager em;
-    protected CatalogCompany catalogCompany;
+    protected CatalogCompany catalogCompany;//todo: change
     protected CatalogueVol catalogueVol;
     protected CatalogueBagage catalogueBagage;
     protected String testName;

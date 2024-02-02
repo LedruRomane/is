@@ -1,4 +1,4 @@
-package tiw.is.server.commandBus;
+package tiw.is.vols.livraison.infrastructure.commandBus;
 
 import jakarta.persistence.EntityManager;
 
@@ -24,10 +24,11 @@ public class TransactionMiddleware implements IMiddleware {
             return next.handle(command);
         } catch (Exception e) {
             em.getTransaction().rollback();
-
             throw e;
         } finally {
-            em.getTransaction().commit();
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().commit();
+            }
         }
     }
 

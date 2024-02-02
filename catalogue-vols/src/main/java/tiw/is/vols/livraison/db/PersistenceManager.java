@@ -27,7 +27,7 @@ public class PersistenceManager {
         config.put("jakarta.persistence.jdbc.url", dbUrl);
         config.put("jakarta.persistence.jdbc.user", dbUser);
         config.put("jakarta.persistence.jdbc.password", dbPassword);
-        config.put("hibernate.hbm2ddl.auto", "create");
+        config.put("hibernate.hbm2ddl.auto", "update"); // sql dump for Serveur Test needs.
         return Persistence
                 .createEntityManagerFactory("pu-catalogue", config);
     }

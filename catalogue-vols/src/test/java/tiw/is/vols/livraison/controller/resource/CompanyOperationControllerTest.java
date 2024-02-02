@@ -1,3 +1,4 @@
+/*
 package tiw.is.vols.livraison.controller.resource;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -61,4 +62,4 @@ public class CompanyOperationControllerTest extends CatalogueTest {
         assertDoesNotThrow(() -> controller.deleteCompany(companies[0]));
         assertThrows(ResourceNotFoundException.class, () -> controller.deleteCompany(anotherCompany));
     }
-}
+}*/

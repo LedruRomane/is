@@ -1,8 +1,8 @@
-package tiw.is.server.handler.company;
+package tiw.is.vols.livraison.infrastructure.handler.company;
 
-import tiw.is.server.command.company.CreateCompanyCommand;
-import tiw.is.server.commandBus.ICommandHandler;
-import tiw.is.vols.livraison.controller.resource.CompanyOperationController;
+import tiw.is.vols.livraison.dao.CompanyDao;
+import tiw.is.vols.livraison.infrastructure.command.company.CreateCompanyCommand;
+import tiw.is.vols.livraison.infrastructure.commandBus.ICommandHandler;
 import tiw.is.vols.livraison.exception.ResourceAlreadyExistsException;
 import tiw.is.vols.livraison.model.Company;
 
@@ -11,11 +11,11 @@ import tiw.is.vols.livraison.model.Company;
  * We inject the controller that provide the operations for the creation.
  * Should implement the HandlerInterface to ensure a strong typing check.
  */
-public class CreateCompanyCommandCommandHandler implements ICommandHandler<Company, CreateCompanyCommand> {
+public class CreateCompanyCommandHandler implements ICommandHandler<Company, CreateCompanyCommand> {
 
-    private final CompanyOperationController companyController;
-    public CreateCompanyCommandCommandHandler(CompanyOperationController controller) {
-        companyController = controller;
+    private final CompanyDao dao;
+    public CreateCompanyCommandHandler(CompanyDao dao) {
+        this.dao = dao;
     }
 
     /**
@@ -26,7 +26,9 @@ public class CreateCompanyCommandCommandHandler implements ICommandHandler<Compa
      */
     public Company handle(CreateCompanyCommand command) throws ResourceAlreadyExistsException {
         Company company = new Company(command.id());
-        companyController.createCompany(company);
+        if (dao.getOneById(company.getId()) != null)
+            throw new ResourceAlreadyExistsException("Une compagnie avec l'ID " + company.getId() + " existe déjà.");
+        dao.save(company);
 
         return company;
     }

@@ -6,14 +6,20 @@ import org.picocontainer.PicoBuilder;
 import org.picocontainer.injectors.ConstructorInjection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import tiw.is.server.command.company.CreateCompanyCommand;
-import tiw.is.server.commandBus.*;
-import tiw.is.server.exception.CommandNotFoundException;
-import tiw.is.server.handler.company.CreateCompanyCommandCommandHandler;
+import tiw.is.vols.livraison.dao.CompanyDao;
+import tiw.is.vols.livraison.infrastructure.command.company.CreateCompanyCommand;
+import tiw.is.vols.livraison.exception.CommandNotFoundException;
+import tiw.is.vols.livraison.infrastructure.command.company.DeleteCompanyCommand;
+import tiw.is.vols.livraison.infrastructure.command.company.GetCompaniesCommand;
+import tiw.is.vols.livraison.infrastructure.command.company.GetCompanyCommand;
+import tiw.is.vols.livraison.infrastructure.commandBus.*;
+import tiw.is.vols.livraison.infrastructure.handler.company.CreateCompanyCommandHandler;
 import tiw.is.server.utils.JsonFormatter;
-import tiw.is.vols.livraison.controller.resource.CompanyOperationController;
 import tiw.is.vols.livraison.dao.CatalogCompany;
 import tiw.is.vols.livraison.db.PersistenceManager;
+import tiw.is.vols.livraison.infrastructure.handler.company.DeleteCompanyCommandHandler;
+import tiw.is.vols.livraison.infrastructure.handler.company.GetCompaniesCommandHandler;
+import tiw.is.vols.livraison.infrastructure.handler.company.GetCompanyCommandHandler;
 import tiw.is.vols.livraison.model.Company;
 
 import java.util.ArrayList;
@@ -46,17 +52,23 @@ public class ServeurImpl implements Serveur {
         picoContainer.addComponent(em);
 
         // Register the DAO and Controller :
-        picoContainer.addComponent(CatalogCompany.class);
-        picoContainer.addComponent(CompanyOperationController.class);
+        picoContainer.addComponent(CompanyDao.class);
 
         // Register the message bus handlers:
-        picoContainer.addComponent(CreateCompanyCommandCommandHandler.class);
+        picoContainer.addComponent(CreateCompanyCommandHandler.class);
+        picoContainer.addComponent(GetCompanyCommandHandler.class);
+        picoContainer.addComponent(GetCompaniesCommandHandler.class);
+        picoContainer.addComponent(DeleteCompanyCommandHandler.class);
 
         // Create the handler service locator and register it.
+        // maybe we need a disambiguation using the Parameter Object ?
         Map<Class, ICommandHandler> handlerLocator = new HashMap<>();
         // todo: modify this into the conf file. All handlers with their command should be passed into handlerLocator services
-        // pattern Annuaire
-        handlerLocator.put(CreateCompanyCommand.class, picoContainer.getComponent(CreateCompanyCommandCommandHandler.class));
+        // pattern Annuaire : pattern service locator
+        handlerLocator.put(CreateCompanyCommand.class, picoContainer.getComponent(CreateCompanyCommandHandler.class));
+        handlerLocator.put(GetCompanyCommand.class, picoContainer.getComponent(GetCompanyCommandHandler.class));
+        handlerLocator.put(GetCompaniesCommand.class, picoContainer.getComponent(GetCompaniesCommandHandler.class));
+        handlerLocator.put(DeleteCompanyCommand.class, picoContainer.getComponent(DeleteCompanyCommandHandler.class));
 
         picoContainer.addComponent(handlerLocator);
 
@@ -64,7 +76,8 @@ public class ServeurImpl implements Serveur {
         picoContainer.addComponent(TransactionMiddleware.class);
         picoContainer.addComponent(HandlerMiddleware.class);
 
-        Collection<IMiddleware> middleware = new ArrayList<>(); // looks like the conf file.
+        // Create middleware queue we need for commandbus :
+        Collection<IMiddleware> middleware = new ArrayList<>();
         middleware.add(picoContainer.getComponent(TransactionMiddleware.class));
         middleware.add(picoContainer.getComponent(HandlerMiddleware.class));
 
@@ -78,6 +91,10 @@ public class ServeurImpl implements Serveur {
         return picoContainer.getComponent(CommandBus.class);
     }
 
+    public EntityManager getEntityManager() {
+        return picoContainer.getComponent(EntityManager.class);
+    }
+
     /**
      * Unique endpoint simulate API queries or mutations.
      * @param command String simulate a path like '/companies' -> 'getCompanies' (keyword)
@@ -88,11 +105,18 @@ public class ServeurImpl implements Serveur {
         try {
             return switch (command) {
                 case "createCompany" -> companyFormatter.serializeObject(
-                        // cleaner ? -> check the type passed to the command bus handle method.
+                        // todo: cleaner ? -> check the type passed to the command bus handle method.
                         this.getCommandBus().handle(new CreateCompanyCommand((String) params.get("id")))
                 );
-                // case "deleteCompany" ->
-                // case "getCompanies" ->
+                case "getCompany" -> companyFormatter.serializeObject(
+                        this.getCommandBus().handle(new GetCompanyCommand((String) params.get("id")))
+                );
+                case "getCompanies" -> companyFormatter.serializeObject(
+                        this.getCommandBus().handle(new GetCompaniesCommand())
+                );
+                case "deleteCompany" -> companyFormatter.serializeObject(
+                        this.getCommandBus().handle(new DeleteCompanyCommand((String) params.get("id")))
+                );
                 // todo: etc...
                 default -> throw new CommandNotFoundException(command + " does not exist.");
             };

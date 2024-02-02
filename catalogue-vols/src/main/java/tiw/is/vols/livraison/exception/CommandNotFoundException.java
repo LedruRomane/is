@@ -1,4 +1,4 @@
-package tiw.is.server.exception;
+package tiw.is.vols.livraison.exception;
 
 public class CommandNotFoundException extends Exception {
 

@@ -28,6 +28,7 @@
     <modules>
         <module>catalogue-vols</module>
         <module>integration</module>
+        <module>server</module>
     </modules>
 
     <build>

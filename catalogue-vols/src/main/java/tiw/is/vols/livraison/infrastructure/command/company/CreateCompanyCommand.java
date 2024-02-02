@@ -1,6 +1,6 @@
-package tiw.is.server.command.company;
+package tiw.is.vols.livraison.infrastructure.command.company;
 
-import tiw.is.server.commandBus.ICommand;
+import tiw.is.vols.livraison.infrastructure.commandBus.ICommand;
 
 /**
  * Record that provide getter or setter implicitly.

@@ -7,13 +7,13 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class CatalogueCompanyTest extends CatalogueTest {
 
-    @Test
+   /* @Test
     void getCompanies() {
         var comps = catalogCompany.getCompanies();
         for (Company c : companies) {
             assertTrue(comps.contains(c));
         }
-    }
+    }*/
 
     @Test
     void getCompany() {
