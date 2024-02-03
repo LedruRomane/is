@@ -23,6 +23,7 @@ import tiw.is.vols.livraison.infrastructure.command.resource.flight.DeleteFlight
 import tiw.is.vols.livraison.infrastructure.command.resource.flight.GetFlightCommand;
 import tiw.is.vols.livraison.infrastructure.command.resource.flight.GetFlightsCommand;
 import tiw.is.vols.livraison.infrastructure.command.service.baggage.DeliverBaggageCommand;
+import tiw.is.vols.livraison.infrastructure.command.service.baggage.RetrievalBaggageCommand;
 import tiw.is.vols.livraison.infrastructure.commandBus.*;
 import tiw.is.vols.livraison.infrastructure.handler.resource.baggage.CreateBaggageCommandHandler;
 import tiw.is.vols.livraison.infrastructure.handler.resource.baggage.DeleteBaggageCommandHandler;
@@ -39,6 +40,7 @@ import tiw.is.vols.livraison.infrastructure.handler.resource.flight.DeleteFlight
 import tiw.is.vols.livraison.infrastructure.handler.resource.flight.GetFlightCommandHandler;
 import tiw.is.vols.livraison.infrastructure.handler.resource.flight.GetFlightsCommandHandler;
 import tiw.is.vols.livraison.infrastructure.handler.service.baggage.DeliverBaggageCommandHandler;
+import tiw.is.vols.livraison.infrastructure.handler.service.baggage.RetrievalBaggageCommandHandler;
 import tiw.is.vols.livraison.model.Company;
 
 import java.util.ArrayList;
@@ -89,6 +91,7 @@ public class ServeurImpl implements Serveur {
         picoContainer.addComponent(DeleteBaggageCommandHandler.class);
         picoContainer.addComponent(CreateBaggageCommandHandler.class);
         picoContainer.addComponent(DeliverBaggageCommandHandler.class);
+        picoContainer.addComponent(RetrievalBaggageCommandHandler.class);
 
         // Create the handler service locator and register it.
         // maybe we need a disambiguation using the Parameter Object ?
@@ -108,6 +111,7 @@ public class ServeurImpl implements Serveur {
         handlerLocator.put(DeleteBaggageCommand.class, picoContainer.getComponent(DeleteBaggageCommandHandler.class));
         handlerLocator.put(CreateBaggageCommand.class, picoContainer.getComponent(CreateBaggageCommandHandler.class));
         handlerLocator.put(DeliverBaggageCommand.class, picoContainer.getComponent(DeliverBaggageCommandHandler.class));
+        handlerLocator.put(RetrievalBaggageCommand.class, picoContainer.getComponent(RetrievalBaggageCommandHandler.class));
 
 
         picoContainer.addComponent(handlerLocator);
@@ -196,6 +200,12 @@ public class ServeurImpl implements Serveur {
                 );
                 case "deliver" -> formatter.serializeObject(
                         this.getCommandBus().handle(new DeliverBaggageCommand(
+                                (String) params.get("id"),
+                                (int) params.get("num")
+                        ))
+                );
+                case "retrieval" -> formatter.serializeObject(
+                        this.getCommandBus().handle(new RetrievalBaggageCommand(
                                 (String) params.get("id"),
                                 (int) params.get("num")
                         ))

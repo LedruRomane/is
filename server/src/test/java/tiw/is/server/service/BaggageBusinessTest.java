@@ -40,4 +40,18 @@ public class BaggageBusinessTest extends FixturesManager {
 
         // todo: assert isDelivre true
     }
+
+    @Test
+    void retrieval() {
+        String command = "retrieval";
+        Map<String, Object> params = new HashMap<>();
+        params.put("id", "vol2");
+        params.put("num", 21);
+
+        String result = (String) serveurImpl.processRequest(command, params);
+        LOG.info(result);
+        assertEquals("{\"flightId\":\"vol2\",\"numero\":21,\"weight\":2.0,\"passenger\":\"Jack\"}", result);
+
+        // todo: assert isDelivre true
+    }
 }
