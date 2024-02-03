@@ -1,17 +1,9 @@
 package tiw.is.vols.livraison.controller.service;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 import tiw.is.vols.livraison.dao.CatalogueTest;
-import tiw.is.vols.livraison.dto.BagageDTO;
 import tiw.is.vols.livraison.dto.VolDTO;
-import tiw.is.vols.livraison.exception.ResourceNotFoundException;
-import tiw.is.vols.livraison.model.Vol;
-
-import java.util.Collection;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class VolBusinessControllerTest extends CatalogueTest {
     private VolBusinessController controller;
@@ -35,7 +27,7 @@ class VolBusinessControllerTest extends CatalogueTest {
     void bagagesPerdus() {
         vols[1].fermerLivraison();
         try {
-            Collection<BagageDTO> bagageDTOS = controller.bagagesPerdus(
+            Collection<BaggageDTO> bagageDTOS = controller.bagagesPerdus(
                     VolDTO.fromVol(vols[1]));
             assertEquals(1,
                     bagageDTOS.size());
@@ -63,7 +55,7 @@ class VolBusinessControllerTest extends CatalogueTest {
         Vol vol = vols[1];
         vol.fermerLivraison();
         try {
-            Collection<BagageDTO> bagageDTOS = controller.bagagesNonRecuperes(
+            Collection<BaggageDTO> bagageDTOS = controller.bagagesNonRecuperes(
                     VolDTO.fromVol(vol));
             assertEquals(2, bagageDTOS.size());
             em.getTransaction().begin();

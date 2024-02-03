@@ -4,7 +4,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import org.junit.jupiter.api.*;
 import tiw.is.vols.livraison.db.PersistenceManager;
-import tiw.is.vols.livraison.model.Bagage;
+import tiw.is.vols.livraison.model.Baggage;
 import tiw.is.vols.livraison.model.Company;
 import tiw.is.vols.livraison.model.Vol;
 
@@ -19,7 +19,7 @@ public abstract class CatalogueTest {
     protected String testName;
     protected Company[] companies;
     protected Vol[] vols;
-    protected Bagage[] bagages;
+    protected Baggage[] baggages;
 
     @BeforeAll
     public static void setupClass() {
@@ -55,20 +55,20 @@ public abstract class CatalogueTest {
                                 companies[i],
                                 "livraison" + "-" + i + "-" + j)))
                 .toArray(Vol[]::new);
-        bagages = IntStream.range(0, vols.length)
+        baggages = IntStream.range(0, vols.length)
                 .boxed()
                 .flatMap(i -> IntStream.range(0, i + 1)
                         .mapToObj(j -> vols[i].createBagage(i * 10 + 10,
                                 "p-" + testName + "-" + j)))
-                .toArray(Bagage[]::new);
-        // changement des booleens de bagages pour un peu de variété afin de
+                .toArray(Baggage[]::new);
+        // changement des booleens de baggages pour un peu de variété afin de
         // tester getBagagesPerdusByVolId et getBagagesNonRecuperesByVolId
-        for (int i = 0; i < bagages.length; i++) {
+        for (int i = 0; i < baggages.length; i++) {
             if (i % 2 == 0) {
-                bagages[i].delivrer();
+                baggages[i].delivrer();
             }
             if (i % 3 == 0) {
-                bagages[i].recuperer();
+                baggages[i].recuperer();
             }
         }
     }
@@ -81,7 +81,7 @@ public abstract class CatalogueTest {
         for (Vol v : vols) {
             em.persist(v);
         }
-        for (Bagage b : bagages) {
+        for (Baggage b : baggages) {
             em.persist(b);
         }
         em.getTransaction().commit();
@@ -96,7 +96,7 @@ public abstract class CatalogueTest {
 
     protected void destroyData() {
         em.getTransaction().begin();
-        for (Bagage b : bagages) {
+        for (Baggage b : baggages) {
             if (em.contains(b)) {
                 em.remove(b);
             }

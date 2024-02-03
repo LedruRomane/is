@@ -16,9 +16,8 @@ public class DeleteCompanyCommandHandler implements ICommandHandler<Boolean, Del
     }
 
     public Boolean handle(DeleteCompanyCommand command) throws ResourceNotFoundException {
-        Company company = new Company(command.id());
-        if(!dao.deleteOneById(company.getId()))
-            throw new ResourceNotFoundException("La compagnie " + company.getId() + " n'existe pas.");
+        if(!dao.deleteOneById(command.id()))
+            throw new ResourceNotFoundException("La compagnie " + command.id() + " n'existe pas.");
         return true;
     }
 }

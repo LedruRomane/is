@@ -86,8 +86,8 @@ public class Vol implements Serializable {
      * @param passager la référence au passager du bagage
      * @return le bagage créé.
      */
-    public Bagage createBagage(float poids, String passager) {
-        Bagage b = new Bagage(this, nextNumeroBagage, poids, passager);
+    public Baggage createBagage(float poids, String passager) {
+        Baggage b = new Baggage(this, nextNumeroBagage, poids, passager);
         nextNumeroBagage++;
         return b;
     }

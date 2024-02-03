@@ -2,7 +2,7 @@ package tiw.is.vols.livraison.controller.resource;
 
 import tiw.is.vols.livraison.dao.CatalogueBagage;
 import tiw.is.vols.livraison.dao.CatalogueVol;
-import tiw.is.vols.livraison.dto.BagageDTO;
+import tiw.is.vols.livraison.dto.BaggageDTO;
 import tiw.is.vols.livraison.exception.ResourceNotFoundException;
 import tiw.is.vols.livraison.model.Vol;
 
@@ -17,7 +17,7 @@ public class BagageOperationController {
      * Créée une instance du contrôleur qui utilisera le DAO passé
      * en argument pour gérer la persistence des objets.
      *
-     * @param dao le DAO en charge de la gestion des objets Bagage
+     * @param dao le DAO en charge de la gestion des objets Baggage
      * @param daoVol le DAO en charge de la gestion des objets Vol
      */
     public BagageOperationController(CatalogueBagage dao, CatalogueVol daoVol) {
@@ -30,19 +30,19 @@ public class BagageOperationController {
      *
      * @return la liste contenant des DTO de bagages
      */
-    public Collection<BagageDTO> getBagages() {
-        return dao.getBagages().stream().map(BagageDTO::fromBagage).toList();
+    public Collection<BaggageDTO> getBagages() {
+        return dao.getBagages().stream().map(BaggageDTO::fromBaggage).toList();
     }
 
     /**
      * Renvoie un bagage cherché par identifiant de vol et numéro
      *
-     * @param dto Un BagageDTO comportant l'identifiant du vol auquel ce bagage est rattaché et le numéro du bagage
+     * @param dto Un BaggageDTO comportant l'identifiant du vol auquel ce bagage est rattaché et le numéro du bagage
      * @return le bagage cherché
      * @throws ResourceNotFoundException si aucun bagage trouvé
      */
-    public BagageDTO getBagage(BagageDTO dto) throws ResourceNotFoundException {
-        return BagageDTO.fromBagage(Optional.ofNullable(dao.getBagageById(dto.volId(), dto.numero())).orElseThrow(
+    public BaggageDTO getBagage(BaggageDTO dto) throws ResourceNotFoundException {
+        return BaggageDTO.fromBaggage(Optional.ofNullable(dao.getBagageById(dto.volId(), dto.numero())).orElseThrow(
                 () -> new ResourceNotFoundException("Le vol " + dto.volId() + " n'existe pas.")
         ));
     }
@@ -52,20 +52,20 @@ public class BagageOperationController {
      *
      * @param dto le DTO correspondant au bagage - ATTENTION : le numéro est (ré)initialisé par Vol.createBagage()
      */
-    public BagageDTO createBagage(BagageDTO dto) throws ResourceNotFoundException {
+    public BaggageDTO createBagage(BaggageDTO dto) throws ResourceNotFoundException {
         Vol vol = Optional.ofNullable(daoVol.getVol(dto.volId())).orElseThrow(
                 () -> new ResourceNotFoundException("Le vol " + dto.volId() + " n'existe pas.")
         );
-        return BagageDTO.fromBagage(dao.createBagage(vol, dto.poids(), dto.passager()));
+        return BaggageDTO.fromBaggage(dao.createBagage(vol, dto.poids(), dto.passager()));
     }
 
     /**
      * Supprime un bagage
      *
-     * @param dto Un BagageDTO comportant l'identifiant du vol auquel ce bagage est rattaché et le numéro du bagage
+     * @param dto Un BaggageDTO comportant l'identifiant du vol auquel ce bagage est rattaché et le numéro du bagage
      * @throws ResourceNotFoundException s'il n'a pas été trouvé
      */
-    public void deleteBagage(BagageDTO dto) throws ResourceNotFoundException {
+    public void deleteBagage(BaggageDTO dto) throws ResourceNotFoundException {
         if(!dao.deleteBagageById(dto.volId(), dto.numero()))
             throw new ResourceNotFoundException("Le bagage du vol " + dto.volId() + " et avec le numéro " + dto.numero() + " n'existe pas.");
     }

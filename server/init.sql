@@ -1,7 +1,7 @@
 -- create if not exists tables
 TRUNCATE company CASCADE;
 TRUNCATE vol CASCADE;
-TRUNCATE bagage CASCADE;
+TRUNCATE baggage CASCADE;
 
 CREATE TABLE IF NOT EXISTS company (
     id VARCHAR(255) PRIMARY KEY
@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS vol (
     pointlivraisonbagages VARCHAR(255)
 );
 
-CREATE TABLE IF NOT EXISTS bagage (
+CREATE TABLE IF NOT EXISTS baggage (
     numero INTEGER,
     delivre BOOLEAN,
     poids REAL,
@@ -34,7 +34,7 @@ VALUES ('vol1', true, 22, 'company1', 'Paris'),
        ('vol3', false, 23, 'company2', 'Budapest'),
        ('vol4', true, 22, 'company2', 'London');
 
-INSERT INTO bagage(numero, delivre, poids, recupere, passager, vol_id)
+INSERT INTO baggage(numero, delivre, poids, recupere, passager, vol_id)
 VALUES (21, false, 2, false, 'Paul', 'vol1'),
        (21, true, 2, false, 'Jack', 'vol2'),
        (21, true, 2, true, 'Foo', 'vol3'),

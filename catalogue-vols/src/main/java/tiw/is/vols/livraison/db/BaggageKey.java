@@ -6,16 +6,16 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
 
-public class BagageKey implements Serializable {
+public class BaggageKey implements Serializable {
     @Serial
     private static final long serialVersionUID = 1779876715614136070L;
     private Vol vol;
     private int numero;
 
-    public BagageKey() {
+    public BaggageKey() {
     }
 
-    public BagageKey(Vol vol, int numero) {
+    public BaggageKey(Vol vol, int numero) {
         this.vol = vol;
         this.numero = numero;
     }
@@ -40,8 +40,8 @@ public class BagageKey implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        BagageKey bagageKey = (BagageKey) o;
-        return numero == bagageKey.numero && vol.equals(bagageKey.vol);
+        BaggageKey baggageKey = (BaggageKey) o;
+        return numero == baggageKey.numero && vol.equals(baggageKey.vol);
     }
 
     @Override

@@ -2,7 +2,7 @@ package tiw.is.vols.livraison.controller.service;
 
 import tiw.is.vols.livraison.dao.CatalogueBagage;
 import tiw.is.vols.livraison.dao.CatalogueVol;
-import tiw.is.vols.livraison.dto.BagageDTO;
+import tiw.is.vols.livraison.dto.BaggageDTO;
 import tiw.is.vols.livraison.dto.VolDTO;
 import tiw.is.vols.livraison.exception.ResourceNotFoundException;
 import tiw.is.vols.livraison.model.Vol;
@@ -36,21 +36,21 @@ public class VolBusinessController {
         dao.saveVol(vol);
     }
 
-    public Collection<BagageDTO> bagagesPerdus(VolDTO dto) throws ResourceNotFoundException {
+    public Collection<BaggageDTO> bagagesPerdus(VolDTO dto) throws ResourceNotFoundException {
         Vol vol = Optional.ofNullable(dao.getVol(dto.id())).orElseThrow(
                 () -> new ResourceNotFoundException("Le vol " + dto.id() + " n'existe pas.")
         );
         if(vol.isLivraisonEnCours())
             throw new IllegalStateException("Impossible de lister les bagages perdus tant que la livraison est en cours.");
-        return daoBagage.getBagagesPerdusByVolId(dto.id()).stream().map(BagageDTO::fromBagage).toList();
+        return daoBagage.getBagagesPerdusByVolId(dto.id()).stream().map(BaggageDTO::fromBaggage).toList();
     }
 
-    public Collection<BagageDTO> bagagesNonRecuperes(VolDTO dto) throws ResourceNotFoundException {
+    public Collection<BaggageDTO> bagagesNonRecuperes(VolDTO dto) throws ResourceNotFoundException {
         Vol vol = Optional.ofNullable(dao.getVol(dto.id())).orElseThrow(
                 () -> new ResourceNotFoundException("Le vol " + dto.id() + " n'existe pas.")
         );
         if(vol.isLivraisonEnCours())
             throw new IllegalStateException("Impossible de lister les bagages non récupérés tant que la livraison est en cours.");
-        return daoBagage.getBagagesNonRecuperesByVolId(dto.id()).stream().map(BagageDTO::fromBagage).toList();
+        return daoBagage.getBagagesNonRecuperesByVolId(dto.id()).stream().map(BaggageDTO::fromBaggage).toList();
     }
 }

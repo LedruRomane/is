@@ -8,7 +8,8 @@ import tiw.is.vols.livraison.model.Vol;
 
 import java.util.Collection;
 
-public class CompanyDao implements IDataAccessObject<Company> {
+public class CatalogCompany { //todo: delete
+
     private final EntityManager em;
 
     /**
@@ -17,14 +18,16 @@ public class CompanyDao implements IDataAccessObject<Company> {
      *
      * @param em l'entity manager en charge de la gestion des objets
      */
-    public CompanyDao(EntityManager em) { this.em = em; }
+    public CatalogCompany(EntityManager em) {
+        this.em = em;
+    }
 
     /**
      * Renvoie la collection de toutes compagnies
      *
      * @return toutes les compagnies
      */
-    public Collection<Company> getAll() {
+    public Collection<Company> getCompanies() {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         var q = cb.createQuery(Company.class);
         var r = q.from(Company.class);
@@ -37,7 +40,7 @@ public class CompanyDao implements IDataAccessObject<Company> {
      * @param id l'id de la compagnie cherchée
      * @return la compagnie trouvée ou null si aucune compagnie n'a été trouvée
      */
-    public Company getOneById(String id) {
+    public Company getCompany(String id) {
         return em.find(Company.class, id);
     }
 
@@ -48,7 +51,7 @@ public class CompanyDao implements IDataAccessObject<Company> {
      * @return L'objet compagnie connu par le support de persistence. Doit
      * être equals() à l'objet c.
      */
-    public Company save(Company c) {
+    public Company saveCompany(Company c) {
         if (em.contains(c)) {
             return c;
         } else {
@@ -67,7 +70,7 @@ public class CompanyDao implements IDataAccessObject<Company> {
      * @param id l'identifiant de la compagnie à supprimer.
      * @return true si la compagnie à été supprimée.
      */
-    public boolean deleteOneById(String id) {
+    public boolean deleteCompanyById(String id) {
         Company c = em.find(Company.class, id);
         if (c == null) {
             return false;
@@ -78,7 +81,7 @@ public class CompanyDao implements IDataAccessObject<Company> {
         }
     }
 
-    /* ON CASCADE */
+
     /**
      * Supprime tous les vols rattachés à une compagnie
      *

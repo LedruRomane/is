@@ -4,13 +4,13 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
 import jakarta.persistence.ManyToOne;
-import tiw.is.vols.livraison.db.BagageKey;
+import tiw.is.vols.livraison.db.BaggageKey;
 
 import java.util.Objects;
 
 @Entity
-@IdClass(BagageKey.class)
-public class Bagage {
+@IdClass(BaggageKey.class)
+public class Baggage {
     @Id
     @ManyToOne
     private Vol vol;
@@ -20,10 +20,10 @@ public class Bagage {
     private String passager;
     private boolean delivre, recupere;
 
-    public Bagage() {
+    public Baggage() {
     }
 
-    public Bagage(Vol vol, int numero, float poids, String passager) {
+    public Baggage(Vol vol, int numero, float poids, String passager) {
         this.vol = vol;
         this.numero = numero;
         this.poids = poids;
@@ -36,8 +36,8 @@ public class Bagage {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Bagage bagage = (Bagage) o;
-        return numero == bagage.numero && vol.equals(bagage.vol);
+        Baggage baggage = (Baggage) o;
+        return numero == baggage.numero && vol.equals(baggage.vol);
     }
 
     @Override

@@ -11,9 +11,11 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.*;
 
 
-public class CompanyManager extends FixturesManager {
+public class CompanyTest extends FixturesManager {
     private static ServeurImpl serveurImpl;
-    private final static Logger LOG = LoggerFactory.getLogger(CompanyManager.class);
+    private final static Logger LOG = LoggerFactory.getLogger(CompanyTest.class);
+    private final Map<String, Object> voidParams = new HashMap<>();
+
     private final String companyID = "company1";
 
 
@@ -53,9 +55,8 @@ public class CompanyManager extends FixturesManager {
     @Test
     void getCompanies() {
         String command = "getCompanies";
-        Map<String, Object> params = new HashMap<>();
 
-        String result = (String) serveurImpl.processRequest(command, params);
+        String result = (String) serveurImpl.processRequest(command, voidParams);
         LOG.info(result);
         assertEquals("[{\"id\":\"company1\"},{\"id\":\"company2\"}]", result);
     }

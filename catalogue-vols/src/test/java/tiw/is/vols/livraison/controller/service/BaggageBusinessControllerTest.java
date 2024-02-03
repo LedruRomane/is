@@ -4,14 +4,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 import tiw.is.vols.livraison.dao.CatalogueTest;
-import tiw.is.vols.livraison.dto.BagageDTO;
+import tiw.is.vols.livraison.dto.BaggageDTO;
 import tiw.is.vols.livraison.exception.ResourceNotFoundException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class BagageBusinessControllerTest extends CatalogueTest {
+class BaggageBusinessControllerTest extends CatalogueTest {
     private BagageBusinessController controller;
-    private final BagageDTO dumbBagage = new BagageDTO(
+    private final BaggageDTO dumbBagage = new BaggageDTO(
             "Crazy flying saucer",
             0 /* Inutilisé pour la création */,
             -10 /* (c'est de l'antimatière) */,
@@ -25,8 +25,8 @@ class BagageBusinessControllerTest extends CatalogueTest {
     @Test
     void delivrer() {
         try {
-            controller.delivrer(BagageDTO.fromBagage(bagages[0]));
-            assertTrue(bagages[0].isDelivre());
+            controller.delivrer(BaggageDTO.fromBaggage(baggages[0]));
+            assertTrue(baggages[0].isDelivre());
         } catch (ResourceNotFoundException e) {
             fail(e.getMessage());
         }
@@ -36,13 +36,13 @@ class BagageBusinessControllerTest extends CatalogueTest {
     @Test
     void recuperer() {
         try {
-            bagages[0].delivrer();
-            controller.recuperer(BagageDTO.fromBagage(bagages[0]));
-            assertTrue(bagages[0].isRecupere());
+            baggages[0].delivrer();
+            controller.recuperer(BaggageDTO.fromBaggage(baggages[0]));
+            assertTrue(baggages[0].isRecupere());
         } catch (ResourceNotFoundException e) {
             fail(e.getMessage());
         }
-        assertThrows(IllegalStateException.class, () -> controller.recuperer(BagageDTO.fromBagage(bagages[1])));
+        assertThrows(IllegalStateException.class, () -> controller.recuperer(BaggageDTO.fromBaggage(baggages[1])));
         assertThrows(ResourceNotFoundException.class, () -> controller.recuperer(dumbBagage));
     }
 }

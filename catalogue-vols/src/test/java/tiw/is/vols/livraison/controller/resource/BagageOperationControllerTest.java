@@ -5,9 +5,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 import tiw.is.vols.livraison.dao.CatalogueTest;
-import tiw.is.vols.livraison.dto.BagageDTO;
+import tiw.is.vols.livraison.dto.BaggageDTO;
 import tiw.is.vols.livraison.exception.ResourceNotFoundException;
-import tiw.is.vols.livraison.model.Bagage;
+import tiw.is.vols.livraison.model.Baggage;
 import tiw.is.vols.livraison.model.Company;
 import tiw.is.vols.livraison.model.Vol;
 
@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class BagageOperationControllerTest extends CatalogueTest {
     private BagageOperationController controller;
-    private final BagageDTO dumbBagage = new BagageDTO(
+    private final BaggageDTO dumbBagage = new BaggageDTO(
             "Crazy flying saucer",
             0
  Inutilisé pour la création
@@ -35,12 +35,12 @@ public class BagageOperationControllerTest extends CatalogueTest {
 
 @Test
     public void getBagages() {
-        Collection<BagageDTO> bagages1 = controller.getBagages();
-        for(BagageDTO b: bagages1) {
-            assertTrue(Arrays.stream(bagages).toList().contains(new Bagage(catalogueVol.getVol(b.volId()), b.numero(), b.poids(), b.passager())));
+        Collection<BaggageDTO> bagages1 = controller.getBagages();
+        for(BaggageDTO b: bagages1) {
+            assertTrue(Arrays.stream(baggages).toList().contains(new Baggage(catalogueVol.getVol(b.volId()), b.numero(), b.poids(), b.passager())));
         }
-        for(Bagage b: bagages) {
-            assertTrue(bagages1.contains(BagageDTO.fromBagage(b)));
+        for(Baggage b: baggages) {
+            assertTrue(bagages1.contains(BaggageDTO.fromBaggage(b)));
         }
     }
 
@@ -48,7 +48,7 @@ public class BagageOperationControllerTest extends CatalogueTest {
     @Test
     public void getBagage() {
         try {
-            assertEquals(BagageDTO.fromBagage(bagages[0]), controller.getBagage(BagageDTO.fromBagage(bagages[0])));
+            assertEquals(BaggageDTO.fromBaggage(baggages[0]), controller.getBagage(BaggageDTO.fromBaggage(baggages[0])));
         } catch (ResourceNotFoundException e) {
             fail(e.getMessage());
         }
@@ -59,7 +59,7 @@ public class BagageOperationControllerTest extends CatalogueTest {
     public void createBagage() {
         try {
             catalogueVol.saveVol(new Vol(dumbBagage.volId(), catalogCompany.saveCompany(new Company("ALF Inc.")), "Jupiter"));
-            BagageDTO res = controller.createBagage(dumbBagage);
+            BaggageDTO res = controller.createBagage(dumbBagage);
             assertNotNull(catalogueBagage.getBagageById(dumbBagage.volId(), res.numero()));
             assertEquals(dumbBagage.volId(), res.volId());
             assertEquals(dumbBagage.poids(), res.poids());
@@ -71,7 +71,7 @@ public class BagageOperationControllerTest extends CatalogueTest {
 
     @Test
     public void deleteBagage() {
-        assertDoesNotThrow(() -> controller.deleteBagage(BagageDTO.fromBagage(bagages[0])));
+        assertDoesNotThrow(() -> controller.deleteBagage(BaggageDTO.fromBaggage(baggages[0])));
         assertThrows(ResourceNotFoundException.class, () -> controller.deleteBagage(dumbBagage));
     }
 }

@@ -1,9 +1,9 @@
 package tiw.is.vols.livraison.controller.service;
 
 import tiw.is.vols.livraison.dao.CatalogueBagage;
-import tiw.is.vols.livraison.dto.BagageDTO;
+import tiw.is.vols.livraison.dto.BaggageDTO;
 import tiw.is.vols.livraison.exception.ResourceNotFoundException;
-import tiw.is.vols.livraison.model.Bagage;
+import tiw.is.vols.livraison.model.Baggage;
 
 import java.util.Optional;
 
@@ -20,19 +20,19 @@ public class BagageBusinessController {
         this.dao = dao;
     }
 
-    public void delivrer(BagageDTO dto) throws ResourceNotFoundException {
-        Bagage bagage = Optional.ofNullable(dao.getBagageById(dto.volId(), dto.numero())).orElseThrow(
-                () -> new ResourceNotFoundException("Le bagage " + dto.numero() + " du vol " + dto.volId() + " n'existe pas."));
-        bagage.delivrer();
-        dao.updateBagage(bagage);
+    public void delivrer(BaggageDTO dto) throws ResourceNotFoundException {
+        Baggage baggage = Optional.ofNullable(dao.getBagageById(dto.volId(), dto.numero())).orElseThrow(
+                () -> new ResourceNotFoundException("Le baggage " + dto.numero() + " du vol " + dto.volId() + " n'existe pas."));
+        baggage.delivrer();
+        dao.updateBagage(baggage);
     }
 
-    public void recuperer(BagageDTO dto) throws ResourceNotFoundException, IllegalStateException {
-        Bagage bagage = Optional.ofNullable(dao.getBagageById(dto.volId(), dto.numero())).orElseThrow(
-                () -> new ResourceNotFoundException("Le bagage " + dto.numero() + " du vol " + dto.volId() + " n'existe pas."));
-        if(!bagage.isDelivre())
-            throw new IllegalStateException("Un bagage ne peut être récupéré avant d'être délivré.");
-        bagage.recuperer();
-        dao.updateBagage(bagage);
+    public void recuperer(BaggageDTO dto) throws ResourceNotFoundException, IllegalStateException {
+        Baggage baggage = Optional.ofNullable(dao.getBagageById(dto.volId(), dto.numero())).orElseThrow(
+                () -> new ResourceNotFoundException("Le baggage " + dto.numero() + " du vol " + dto.volId() + " n'existe pas."));
+        if(!baggage.isDelivre())
+            throw new IllegalStateException("Un baggage ne peut être récupéré avant d'être délivré.");
+        baggage.recuperer();
+        dao.updateBagage(baggage);
     }
 }

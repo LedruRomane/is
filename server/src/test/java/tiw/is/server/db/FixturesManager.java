@@ -8,7 +8,7 @@ import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public abstract class FixturesTest {
+public abstract class FixturesManager {
 
     public void resetDatabase(EntityManager em) throws Exception {
         Session session = em.unwrap(Session.class);
