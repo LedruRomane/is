@@ -3,7 +3,7 @@ package tiw.is.server;
 import org.junit.jupiter.api.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import tiw.is.server.db.FixturesTest;
+import tiw.is.server.db.FixturesManager;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,9 +11,9 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.*;
 
 
-public class CompanyTest extends FixturesTest {
+public class CompanyManager extends FixturesManager {
     private static ServeurImpl serveurImpl;
-    private final static Logger LOG = LoggerFactory.getLogger(CompanyTest.class);
+    private final static Logger LOG = LoggerFactory.getLogger(CompanyManager.class);
     private final String companyID = "company1";
 
 
@@ -29,7 +29,6 @@ public class CompanyTest extends FixturesTest {
 
     @Test
     void createCompany() {
-
         String command = "createCompany";
         Map<String, Object> params = new HashMap<>();
         String newID = "c-new";
@@ -71,5 +70,8 @@ public class CompanyTest extends FixturesTest {
 
         LOG.info(result);
         assertEquals("true", result);
+        //todo: assert the flight isn't in database anymore ?
     }
+
+    // todo: test exceptions ?
 }
