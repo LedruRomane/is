@@ -13,21 +13,21 @@ import java.util.Objects;
 public class Baggage {
     @Id
     @ManyToOne
-    private Vol vol;
+    private Flight flight;
     @Id
     private int numero;
-    private float poids;
-    private String passager;
+    private float weight;
+    private String passenger;
     private boolean delivre, recupere;
 
     public Baggage() {
     }
 
-    public Baggage(Vol vol, int numero, float poids, String passager) {
-        this.vol = vol;
+    public Baggage(Flight flight, int numero, float weight, String passenger) {
+        this.flight = flight;
         this.numero = numero;
-        this.poids = poids;
-        this.passager = passager;
+        this.weight = weight;
+        this.passenger = passenger;
         this.delivre = false;
         this.recupere = false;
     }
@@ -37,20 +37,20 @@ public class Baggage {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Baggage baggage = (Baggage) o;
-        return numero == baggage.numero && vol.equals(baggage.vol);
+        return numero == baggage.numero && flight.equals(baggage.flight);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(vol, numero);
+        return Objects.hash(flight, numero);
     }
 
-    public Vol getVol() {
-        return vol;
+    public Flight getFlight() {
+        return flight;
     }
 
-    public void setVol(Vol vol) {
-        this.vol = vol;
+    public void setFlight(Flight flight) {
+        this.flight = flight;
     }
 
     public int getNumero() {
@@ -61,20 +61,20 @@ public class Baggage {
         this.numero = numero;
     }
 
-    public float getPoids() {
-        return poids;
+    public float getWeight() {
+        return weight;
     }
 
-    public void setPoids(float poids) {
-        this.poids = poids;
+    public void setWeight(float weight) {
+        this.weight = weight;
     }
 
-    public String getPassager() {
-        return passager;
+    public String getPassenger() {
+        return passenger;
     }
 
-    public void setPassager(String passager) {
-        this.passager = passager;
+    public void setPassenger(String passenger) {
+        this.passenger = passenger;
     }
 
     public boolean isDelivre() {

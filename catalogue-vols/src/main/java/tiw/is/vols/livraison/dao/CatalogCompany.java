@@ -4,7 +4,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import tiw.is.vols.livraison.model.Baggage;
 import tiw.is.vols.livraison.model.Company;
-import tiw.is.vols.livraison.model.Vol;
+import tiw.is.vols.livraison.model.Flight;
 
 import java.util.Collection;
 
@@ -89,9 +89,9 @@ public class CatalogCompany { //todo: delete
      */
     private void deleteVolsByCompanyId(String companyId) {
         deleteBagagesByCompanyId(companyId);
-        var dq = em.createQuery("SELECT v FROM Vol v WHERE v.company.id = :cId", Vol.class);
+        var dq = em.createQuery("SELECT v FROM Flight v WHERE v.company.id = :cId", Flight.class);
         dq.setParameter("cId", companyId);
-        for(Vol v : dq.getResultList()) {
+        for(Flight v : dq.getResultList()) {
             em.remove(v);
         }
     }
@@ -102,7 +102,7 @@ public class CatalogCompany { //todo: delete
      * @param companyId l'id de la compagnie ciblée
      */
     private void deleteBagagesByCompanyId(String companyId) {
-        var dq = em.createQuery("SELECT b FROM Baggage b WHERE b.vol.company.id = :cId", Baggage.class);
+        var dq = em.createQuery("SELECT b FROM Baggage b WHERE b.flight.company.id = :cId", Baggage.class);
         dq.setParameter("cId", companyId);
         for(Baggage b : dq.getResultList()) {
             em.remove(b);

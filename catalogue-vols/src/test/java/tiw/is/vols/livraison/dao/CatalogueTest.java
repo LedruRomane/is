@@ -6,7 +6,7 @@ import org.junit.jupiter.api.*;
 import tiw.is.vols.livraison.db.PersistenceManager;
 import tiw.is.vols.livraison.model.Baggage;
 import tiw.is.vols.livraison.model.Company;
-import tiw.is.vols.livraison.model.Vol;
+import tiw.is.vols.livraison.model.Flight;
 
 import java.util.stream.IntStream;
 
@@ -18,7 +18,7 @@ public abstract class CatalogueTest {
     protected CatalogueBagage catalogueBagage;
     protected String testName;
     protected Company[] companies;
-    protected Vol[] vols;
+    protected Flight[] flights;
     protected Baggage[] baggages;
 
     @BeforeAll
@@ -47,18 +47,18 @@ public abstract class CatalogueTest {
         companies = IntStream.range(0, nb_companies)
                 .mapToObj(i -> new Company("c-" + testName + "-" + i))
                 .toArray(Company[]::new);
-        vols = IntStream.range(0, nb_companies)
+        flights = IntStream.range(0, nb_companies)
                 .boxed()
                 .flatMap(i -> IntStream.range(0, i + 1)
-                        .mapToObj(j -> new Vol(
+                        .mapToObj(j -> new Flight(
                                 "v-" + testName + "-" + i + "-" + j,
                                 companies[i],
                                 "livraison" + "-" + i + "-" + j)))
-                .toArray(Vol[]::new);
-        baggages = IntStream.range(0, vols.length)
+                .toArray(Flight[]::new);
+        baggages = IntStream.range(0, flights.length)
                 .boxed()
                 .flatMap(i -> IntStream.range(0, i + 1)
-                        .mapToObj(j -> vols[i].createBagage(i * 10 + 10,
+                        .mapToObj(j -> flights[i].createBagage(i * 10 + 10,
                                 "p-" + testName + "-" + j)))
                 .toArray(Baggage[]::new);
         // changement des booleens de baggages pour un peu de variété afin de
@@ -78,7 +78,7 @@ public abstract class CatalogueTest {
         for (Company c : companies) {
             em.persist(c);
         }
-        for (Vol v : vols) {
+        for (Flight v : flights) {
             em.persist(v);
         }
         for (Baggage b : baggages) {
@@ -103,7 +103,7 @@ public abstract class CatalogueTest {
         }
         em.getTransaction().commit();
         em.getTransaction().begin();
-        for (Vol v : vols) {
+        for (Flight v : flights) {
             if (em.contains(v)) {
                 em.remove(v);
             }
@@ -116,7 +116,7 @@ public abstract class CatalogueTest {
             }
         }
         em.getTransaction().commit();
-        vols = null;
+        flights = null;
         companies = null;
     }
 }

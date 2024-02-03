@@ -2,8 +2,8 @@ package tiw.is.vols.livraison.dto;
 
 import tiw.is.vols.livraison.model.Baggage;
 
-public record BaggageDTO(String volId, int numero, float poids, String passager) {
+public record BaggageDTO(String flightId, int numero, float weight, String passenger) {
     public static BaggageDTO fromBaggage(Baggage baggage) {
-        return new BaggageDTO(baggage.getVol().getId(), baggage.getNumero(), baggage.getPoids(), baggage.getPassager());
+        return new BaggageDTO(baggage.getFlight().getId(), baggage.getNumero(), baggage.getWeight(), baggage.getPassenger());
     }
 }

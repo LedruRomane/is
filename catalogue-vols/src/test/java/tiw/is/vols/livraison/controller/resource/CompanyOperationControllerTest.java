@@ -1,13 +1,13 @@
 /*
-package tiw.is.vols.livraison.controller.resource;
+package tiw.is.flights.livraison.controller.resource;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
-import tiw.is.vols.livraison.dao.CatalogueTest;
-import tiw.is.vols.livraison.exception.ResourceAlreadyExistsException;
-import tiw.is.vols.livraison.exception.ResourceNotFoundException;
-import tiw.is.vols.livraison.model.Company;
+import tiw.is.flights.livraison.dao.CatalogueTest;
+import tiw.is.flights.livraison.exception.ResourceAlreadyExistsException;
+import tiw.is.flights.livraison.exception.ResourceNotFoundException;
+import tiw.is.flights.livraison.model.Company;
 
 import java.util.Arrays;
 import java.util.Collection;

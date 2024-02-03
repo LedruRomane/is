@@ -3,7 +3,7 @@ package tiw.is.vols.livraison.dao;
 import jakarta.persistence.EntityManager;
 import tiw.is.vols.livraison.db.BaggageKey;
 import tiw.is.vols.livraison.model.Baggage;
-import tiw.is.vols.livraison.model.Vol;
+import tiw.is.vols.livraison.model.Flight;
 
 import java.util.Collection;
 
@@ -28,15 +28,15 @@ public class CatalogueBagage {
     }
 
     /**
-     * Créée un bagage pour le vol indiqué
+     * Créée un bagage pour le flight indiqué
      *
-     * @param vol      le vol concerné par le bagage
+     * @param flight      le flight concerné par le bagage
      * @param poids    le poids du bagage
      * @param passager la référence du passager ayant déposé le bagage
      * @return le bagage créé et persisté
      */
-    public Baggage createBagage(Vol vol, float poids, String passager) {
-        Baggage b = vol.createBagage(poids, passager);
+    public Baggage createBagage(Flight flight, float weight, String passenger) {
+        Baggage b = flight.createBagage(weight, passenger);
         em.persist(b);
         return b;
     }
@@ -49,11 +49,11 @@ public class CatalogueBagage {
      * @return le bagage cherché ou null si aucun bagage n'a été trouvé
      */
     public Baggage getBagageById(String volId, int numero) {
-        Vol vol = catalogueVol.getVol(volId);
-        if (vol == null) {
+        Flight flight = catalogueVol.getVol(volId);
+        if (flight == null) {
             return null;
         }
-        return em.find(Baggage.class, new BaggageKey(vol, numero));
+        return em.find(Baggage.class, new BaggageKey(flight, numero));
     }
 
     /**
@@ -65,13 +65,13 @@ public class CatalogueBagage {
      * @return le bagage mis à jour et persisté ou null si le bagage n'existe
      * pas
      */
-    public Baggage updateBagage(String volId, int numero, float poids,
-                                String passager, boolean delivre,
+    public Baggage updateBagage(String volId, int numero, float weight,
+                                String passenger, boolean delivre,
                                 boolean recupere) {
         Baggage b = getBagageById(volId, numero);
         if (b != null) {
-            b.setPoids(poids);
-            b.setPassager(passager);
+            b.setWeight(weight);
+            b.setPassenger(passenger);
             if (delivre)
                 b.delivrer();
             if (recupere)
@@ -89,8 +89,8 @@ public class CatalogueBagage {
      * pas
      */
     public Baggage updateBagage(Baggage baggage) {
-        return updateBagage(baggage.getVol().getId(), baggage.getNumero(),
-                baggage.getPoids(), baggage.getPassager(), baggage.isDelivre(),
+        return updateBagage(baggage.getFlight().getId(), baggage.getNumero(),
+                baggage.getWeight(), baggage.getPassenger(), baggage.isDelivre(),
                 baggage.isRecupere());
     }
 
@@ -104,7 +104,7 @@ public class CatalogueBagage {
     public Collection<Baggage> getBagagesPerdusByVolId(String volId) {
         var dq = em.createQuery(
                 "SELECT b FROM Baggage b" +
-                        " WHERE b.vol.id = :vId" +
+                        " WHERE b.flight.id = :vId" +
                         " AND b.delivre is false", Baggage.class);
         dq.setParameter("vId", volId);
         return dq.getResultList();
@@ -120,7 +120,7 @@ public class CatalogueBagage {
     public Collection<Baggage> getBagagesNonRecuperesByVolId(String volId) {
         var dq = em.createQuery(
                 "SELECT b FROM Baggage b" +
-                        " WHERE b.vol.id = :vId" +
+                        " WHERE b.flight.id = :vId" +
                         " AND b.recupere is false", Baggage.class);
         dq.setParameter("vId", volId);
         return dq.getResultList();

@@ -1,15 +1,15 @@
 /*
-package tiw.is.vols.livraison.controller.resource;
+package tiw.is.flights.livraison.controller.resource;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
-import tiw.is.vols.livraison.dao.CatalogueTest;
-import tiw.is.vols.livraison.dto.BaggageDTO;
-import tiw.is.vols.livraison.exception.ResourceNotFoundException;
-import tiw.is.vols.livraison.model.Baggage;
-import tiw.is.vols.livraison.model.Company;
-import tiw.is.vols.livraison.model.Vol;
+import tiw.is.flights.livraison.dao.CatalogueTest;
+import tiw.is.flights.livraison.dto.BaggageDTO;
+import tiw.is.flights.livraison.exception.ResourceNotFoundException;
+import tiw.is.flights.livraison.model.Baggage;
+import tiw.is.flights.livraison.model.Company;
+import tiw.is.flights.livraison.model.Flight;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -37,7 +37,7 @@ public class BagageOperationControllerTest extends CatalogueTest {
     public void getBagages() {
         Collection<BaggageDTO> bagages1 = controller.getBagages();
         for(BaggageDTO b: bagages1) {
-            assertTrue(Arrays.stream(baggages).toList().contains(new Baggage(catalogueVol.getVol(b.volId()), b.numero(), b.poids(), b.passager())));
+            assertTrue(Arrays.stream(baggages).toList().contains(new Baggage(catalogueVol.getVol(b.volId()), b.numero(), b.weight(), b.passenger())));
         }
         for(Baggage b: baggages) {
             assertTrue(bagages1.contains(BaggageDTO.fromBaggage(b)));
@@ -58,12 +58,12 @@ public class BagageOperationControllerTest extends CatalogueTest {
     @Test
     public void createBagage() {
         try {
-            catalogueVol.saveVol(new Vol(dumbBagage.volId(), catalogCompany.saveCompany(new Company("ALF Inc.")), "Jupiter"));
+            catalogueVol.saveVol(new Flight(dumbBagage.volId(), catalogCompany.saveCompany(new Company("ALF Inc.")), "Jupiter"));
             BaggageDTO res = controller.createBagage(dumbBagage);
             assertNotNull(catalogueBagage.getBagageById(dumbBagage.volId(), res.numero()));
             assertEquals(dumbBagage.volId(), res.volId());
-            assertEquals(dumbBagage.poids(), res.poids());
-            assertEquals(dumbBagage.passager(), res.passager());
+            assertEquals(dumbBagage.weight(), res.weight());
+            assertEquals(dumbBagage.passenger(), res.passenger());
         } catch (ResourceNotFoundException e) {
             fail(e.getMessage());
         }

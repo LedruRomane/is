@@ -21,15 +21,15 @@ public class BagageBusinessController {
     }
 
     public void delivrer(BaggageDTO dto) throws ResourceNotFoundException {
-        Baggage baggage = Optional.ofNullable(dao.getBagageById(dto.volId(), dto.numero())).orElseThrow(
-                () -> new ResourceNotFoundException("Le baggage " + dto.numero() + " du vol " + dto.volId() + " n'existe pas."));
+        Baggage baggage = Optional.ofNullable(dao.getBagageById(dto.flightId(), dto.numero())).orElseThrow(
+                () -> new ResourceNotFoundException("Le baggage " + dto.numero() + " du vol " + dto.flightId() + " n'existe pas."));
         baggage.delivrer();
         dao.updateBagage(baggage);
     }
 
     public void recuperer(BaggageDTO dto) throws ResourceNotFoundException, IllegalStateException {
-        Baggage baggage = Optional.ofNullable(dao.getBagageById(dto.volId(), dto.numero())).orElseThrow(
-                () -> new ResourceNotFoundException("Le baggage " + dto.numero() + " du vol " + dto.volId() + " n'existe pas."));
+        Baggage baggage = Optional.ofNullable(dao.getBagageById(dto.flightId(), dto.numero())).orElseThrow(
+                () -> new ResourceNotFoundException("Le baggage " + dto.numero() + " du vol " + dto.flightId() + " n'existe pas."));
         if(!baggage.isDelivre())
             throw new IllegalStateException("Un baggage ne peut être récupéré avant d'être délivré.");
         baggage.recuperer();

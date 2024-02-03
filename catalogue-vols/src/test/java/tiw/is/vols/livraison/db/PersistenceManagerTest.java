@@ -7,7 +7,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import tiw.is.vols.livraison.dao.CatalogueVol;
 import tiw.is.vols.livraison.model.Company;
-import tiw.is.vols.livraison.model.Vol;
+import tiw.is.vols.livraison.model.Flight;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -35,13 +35,13 @@ public class PersistenceManagerTest {
     public void testEMSetup() {
         EntityManager em = emf.createEntityManager();
         Company c = new Company("c-testEMSetup");
-        Vol v = new Vol("vol-in-testEMSetup", c, "a");
+        Flight v = new Flight("vol-in-testEMSetup", c, "a");
         em.getTransaction().begin();
         em.persist(c);
         em.persist(v);
         em.getTransaction().commit();
         em.getTransaction().begin();
-        Vol v2 = em.find(Vol.class, v.getId());
+        Flight v2 = em.find(Flight.class, v.getId());
         assertEquals(v, v2);
         em.remove(v2);
         em.remove(em.find(Company.class, c.getId()));
@@ -49,15 +49,15 @@ public class PersistenceManagerTest {
     }
 
     /**
-     * Testing listing of vols
+     * Testing listing of flights
      */
     @Test
     public void testListVols() {
         EntityManager em = emf.createEntityManager();
         Company c = new Company("c-testListVols");
-        Vol v1 = new Vol("vol-in-testListVols1",c, "b");
-        Vol v2 = new Vol("vol-in-testListVols2",c, "c");
-        Vol v3 = new Vol("vol-in-testListVols3",c, "d");
+        Flight v1 = new Flight("vol-in-testListVols1",c, "b");
+        Flight v2 = new Flight("vol-in-testListVols2",c, "c");
+        Flight v3 = new Flight("vol-in-testListVols3",c, "d");
         em.getTransaction().begin();
         em.persist(c);
         em.persist(v1);
@@ -65,13 +65,13 @@ public class PersistenceManagerTest {
         em.persist(v3);
         em.getTransaction().commit();
         CatalogueVol cat = new CatalogueVol(em);
-        Collection<Vol> cv = cat.getVols();
-        for (Vol v : Arrays.asList(v1, v2, v3)) {
+        Collection<Flight> cv = cat.getVols();
+        for (Flight v : Arrays.asList(v1, v2, v3)) {
             assertTrue(cv.contains(v), () -> (v + " not in " + cv));
         }
         em.getTransaction().begin();
-        for (Vol v : Arrays.asList(v1, v2, v3)) {
-            em.remove(em.find(Vol.class, v.getId()));
+        for (Flight v : Arrays.asList(v1, v2, v3)) {
+            em.remove(em.find(Flight.class, v.getId()));
         }
         em.remove(c);
         em.getTransaction().commit();
@@ -88,12 +88,12 @@ public class PersistenceManagerTest {
         em.persist(c);
         em.getTransaction().commit();
         CatalogueVol cat = new CatalogueVol(em);
-        Vol v = new Vol("vol-in-testSaveVol", c, "e");
+        Flight v = new Flight("vol-in-testSaveVol", c, "e");
         em.getTransaction().begin();
         cat.saveVol(v);
         em.getTransaction().commit();
         em.getTransaction().begin();
-        Vol v2 = em.find(Vol.class,v.getId());
+        Flight v2 = em.find(Flight.class,v.getId());
         assertNotNull(v2);
         em.remove(v2);
         em.remove(em.find(Company.class, c.getId()));

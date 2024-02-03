@@ -9,31 +9,36 @@ import org.slf4j.LoggerFactory;
 import tiw.is.vols.livraison.dao.BaggageDao;
 import tiw.is.vols.livraison.dao.CompanyDao;
 import tiw.is.vols.livraison.dao.FlightDao;
-import tiw.is.vols.livraison.infrastructure.command.baggage.GetBaggageCommand;
-import tiw.is.vols.livraison.infrastructure.command.baggage.GetBaggagesCommand;
-import tiw.is.vols.livraison.infrastructure.command.company.CreateCompanyCommand;
+import tiw.is.vols.livraison.infrastructure.command.resource.baggage.CreateBaggageCommand;
+import tiw.is.vols.livraison.infrastructure.command.resource.baggage.DeleteBaggageCommand;
+import tiw.is.vols.livraison.infrastructure.command.resource.baggage.GetBaggageCommand;
+import tiw.is.vols.livraison.infrastructure.command.resource.baggage.GetBaggagesCommand;
+import tiw.is.vols.livraison.infrastructure.command.resource.company.CreateCompanyCommand;
 import tiw.is.vols.livraison.exception.CommandNotFoundException;
-import tiw.is.vols.livraison.infrastructure.command.company.DeleteCompanyCommand;
-import tiw.is.vols.livraison.infrastructure.command.company.GetCompaniesCommand;
-import tiw.is.vols.livraison.infrastructure.command.company.GetCompanyCommand;
-import tiw.is.vols.livraison.infrastructure.command.flight.CreateOrUpdateFlightCommand;
-import tiw.is.vols.livraison.infrastructure.command.flight.DeleteFlightCommand;
-import tiw.is.vols.livraison.infrastructure.command.flight.GetFlightCommand;
-import tiw.is.vols.livraison.infrastructure.command.flight.GetFlightsCommand;
+import tiw.is.vols.livraison.infrastructure.command.resource.company.DeleteCompanyCommand;
+import tiw.is.vols.livraison.infrastructure.command.resource.company.GetCompaniesCommand;
+import tiw.is.vols.livraison.infrastructure.command.resource.company.GetCompanyCommand;
+import tiw.is.vols.livraison.infrastructure.command.resource.flight.CreateOrUpdateFlightCommand;
+import tiw.is.vols.livraison.infrastructure.command.resource.flight.DeleteFlightCommand;
+import tiw.is.vols.livraison.infrastructure.command.resource.flight.GetFlightCommand;
+import tiw.is.vols.livraison.infrastructure.command.resource.flight.GetFlightsCommand;
+import tiw.is.vols.livraison.infrastructure.command.service.baggage.DeliverBaggageCommand;
 import tiw.is.vols.livraison.infrastructure.commandBus.*;
-import tiw.is.vols.livraison.infrastructure.handler.baggage.GetBaggageCommandHandler;
-import tiw.is.vols.livraison.infrastructure.handler.baggage.GetBaggagesCommandHandler;
-import tiw.is.vols.livraison.infrastructure.handler.company.CreateCompanyCommandHandler;
+import tiw.is.vols.livraison.infrastructure.handler.resource.baggage.CreateBaggageCommandHandler;
+import tiw.is.vols.livraison.infrastructure.handler.resource.baggage.DeleteBaggageCommandHandler;
+import tiw.is.vols.livraison.infrastructure.handler.resource.baggage.GetBaggageCommandHandler;
+import tiw.is.vols.livraison.infrastructure.handler.resource.baggage.GetBaggagesCommandHandler;
+import tiw.is.vols.livraison.infrastructure.handler.resource.company.CreateCompanyCommandHandler;
 import tiw.is.server.utils.JsonFormatter;
-import tiw.is.vols.livraison.dao.CatalogCompany;
 import tiw.is.vols.livraison.db.PersistenceManager;
-import tiw.is.vols.livraison.infrastructure.handler.company.DeleteCompanyCommandHandler;
-import tiw.is.vols.livraison.infrastructure.handler.company.GetCompaniesCommandHandler;
-import tiw.is.vols.livraison.infrastructure.handler.company.GetCompanyCommandHandler;
-import tiw.is.vols.livraison.infrastructure.handler.flight.CreateOrUpdateFlightCommandHandler;
-import tiw.is.vols.livraison.infrastructure.handler.flight.DeleteFlightCommandHandler;
-import tiw.is.vols.livraison.infrastructure.handler.flight.GetFlightCommandHandler;
-import tiw.is.vols.livraison.infrastructure.handler.flight.GetFlightsCommandHandler;
+import tiw.is.vols.livraison.infrastructure.handler.resource.company.DeleteCompanyCommandHandler;
+import tiw.is.vols.livraison.infrastructure.handler.resource.company.GetCompaniesCommandHandler;
+import tiw.is.vols.livraison.infrastructure.handler.resource.company.GetCompanyCommandHandler;
+import tiw.is.vols.livraison.infrastructure.handler.resource.flight.CreateOrUpdateFlightCommandHandler;
+import tiw.is.vols.livraison.infrastructure.handler.resource.flight.DeleteFlightCommandHandler;
+import tiw.is.vols.livraison.infrastructure.handler.resource.flight.GetFlightCommandHandler;
+import tiw.is.vols.livraison.infrastructure.handler.resource.flight.GetFlightsCommandHandler;
+import tiw.is.vols.livraison.infrastructure.handler.service.baggage.DeliverBaggageCommandHandler;
 import tiw.is.vols.livraison.model.Company;
 
 import java.util.ArrayList;
@@ -81,6 +86,9 @@ public class ServeurImpl implements Serveur {
         picoContainer.addComponent(DeleteFlightCommandHandler.class);
         picoContainer.addComponent(GetBaggagesCommandHandler.class);
         picoContainer.addComponent(GetBaggageCommandHandler.class);
+        picoContainer.addComponent(DeleteBaggageCommandHandler.class);
+        picoContainer.addComponent(CreateBaggageCommandHandler.class);
+        picoContainer.addComponent(DeliverBaggageCommandHandler.class);
 
         // Create the handler service locator and register it.
         // maybe we need a disambiguation using the Parameter Object ?
@@ -97,6 +105,9 @@ public class ServeurImpl implements Serveur {
         handlerLocator.put(DeleteFlightCommand.class, picoContainer.getComponent(DeleteFlightCommandHandler.class));
         handlerLocator.put(GetBaggagesCommand.class, picoContainer.getComponent(GetBaggagesCommandHandler.class));
         handlerLocator.put(GetBaggageCommand.class, picoContainer.getComponent(GetBaggageCommandHandler.class));
+        handlerLocator.put(DeleteBaggageCommand.class, picoContainer.getComponent(DeleteBaggageCommandHandler.class));
+        handlerLocator.put(CreateBaggageCommand.class, picoContainer.getComponent(CreateBaggageCommandHandler.class));
+        handlerLocator.put(DeliverBaggageCommand.class, picoContainer.getComponent(DeliverBaggageCommandHandler.class));
 
 
         picoContainer.addComponent(handlerLocator);
@@ -161,11 +172,30 @@ public class ServeurImpl implements Serveur {
                 case "deleteFlight" -> formatter.serializeObject(
                         this.getCommandBus().handle(new DeleteFlightCommand((String) params.get("id")))
                 );
+                case "createBaggage" -> formatter.serializeObject(
+                        this.getCommandBus().handle(new CreateBaggageCommand(
+                                (String) params.get("id"),
+                                (String) params.get("weight"),
+                                (String) params.get("passenger")
+                        ))
+                );
                 case "getBaggages" -> formatter.serializeObject(
                         this.getCommandBus().handle(new GetBaggagesCommand())
                 );
                 case "getBaggage" -> formatter.serializeObject(
                         this.getCommandBus().handle(new GetBaggageCommand(
+                                (String) params.get("id"),
+                                (int) params.get("num")
+                        ))
+                );
+                case "deleteBaggage" -> formatter.serializeObject(
+                        this.getCommandBus().handle(new DeleteBaggageCommand(
+                                (String) params.get("id"),
+                                (int) params.get("num")
+                        ))
+                );
+                case "deliver" -> formatter.serializeObject(
+                        this.getCommandBus().handle(new DeliverBaggageCommand(
                                 (String) params.get("id"),
                                 (int) params.get("num")
                         ))

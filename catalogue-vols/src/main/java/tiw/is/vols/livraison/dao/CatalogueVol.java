@@ -2,7 +2,7 @@ package tiw.is.vols.livraison.dao;
 
 import jakarta.persistence.EntityManager;
 import tiw.is.vols.livraison.model.Baggage;
-import tiw.is.vols.livraison.model.Vol;
+import tiw.is.vols.livraison.model.Flight;
 
 import java.util.Collection;
 
@@ -25,8 +25,8 @@ public class CatalogueVol { //todo: delete
      *
      * @return la liste contenant les vols
      */
-    public Collection<Vol> getVols() {
-        return em.createQuery("SELECT v FROM Vol v", Vol.class).getResultList();
+    public Collection<Flight> getVols() {
+        return em.createQuery("SELECT v FROM Flight v", Flight.class).getResultList();
     }
 
     /**
@@ -35,8 +35,8 @@ public class CatalogueVol { //todo: delete
      * @param id l'id du vol recherché
      * @return le vol ou null s'il n'a pas été trouvé
      */
-    public Vol getVol(String id) {
-        return em.find(Vol.class, id);
+    public Flight getVol(String id) {
+        return em.find(Flight.class, id);
     }
 
     /**
@@ -45,11 +45,11 @@ public class CatalogueVol { //todo: delete
      * @param v le vol à sauvegarder
      * @return l'objet représentant v géré par l'entitymanager, qui peut être v lui-même
      */
-    public Vol saveVol(Vol v) {
+    public Flight saveVol(Flight v) {
         if (em.contains(v)) {
             return v;
         } else {
-            Vol v2 =  em.find(Vol.class, v.getId());
+            Flight v2 =  em.find(Flight.class, v.getId());
             if (v2 == null) {
                 em.persist(v);
                 return v;
@@ -66,11 +66,11 @@ public class CatalogueVol { //todo: delete
      * @return true si le vol a été supprimé, false s'il n'existe pas
      */
     public boolean deleteVolById(String id) {
-        Vol vol = em.find(Vol.class, id);
-        boolean exists = vol != null;
+        Flight flight = em.find(Flight.class, id);
+        boolean exists = flight != null;
         if (exists) {
             deleteBagageByVolId(id);
-            em.remove(vol);
+            em.remove(flight);
         }
         return exists;
     }

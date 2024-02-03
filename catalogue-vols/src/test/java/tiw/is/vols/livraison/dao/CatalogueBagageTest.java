@@ -1,9 +1,9 @@
 /*
-package tiw.is.vols.livraison.dao;
+package tiw.is.flights.livraison.dao;
 
 import org.junit.jupiter.api.Test;
-import tiw.is.vols.livraison.model.Baggage;
-import tiw.is.vols.livraison.model.Vol;
+import tiw.is.flights.livraison.model.Baggage;
+import tiw.is.flights.livraison.model.Flight;
 
 import java.util.Collection;
 
@@ -30,16 +30,16 @@ class CatalogueBagageTest extends CatalogueTest {
 
     @Test
     void createBagage() {
-        Vol v = vols[0];
+        Flight v = flights[0];
         em.getTransaction().begin();
-        String passager = "p-" + testName + "nouveau";
-        Baggage b = catalogueBagage.createBagage(v, 1, passager);
+        String passenger = "p-" + testName + "nouveau";
+        Baggage b = catalogueBagage.createBagage(v, 1, passenger);
         em.getTransaction().commit();
         assertNotNull(b);
-        assertEquals(1, b.getPoids());
-        assertEquals(passager, b.getPassager());
+        assertEquals(1, b.getWeight());
+        assertEquals(passenger, b.getPassenger());
         em.getTransaction().begin();
-        Baggage b2 = catalogueBagage.createBagage(v, 1, passager);
+        Baggage b2 = catalogueBagage.createBagage(v, 1, passenger);
         em.getTransaction().commit();
         assertNotEquals(b, b2);
         assertNotEquals(b.getNumero(),b2.getNumero());
@@ -71,7 +71,7 @@ class CatalogueBagageTest extends CatalogueTest {
 
     @Test
     void getBagagesPerdusByVolId() {
-        String lastVolId = vols[vols.length-1].getId();
+        String lastVolId = flights[flights.length-1].getId();
         Collection<Baggage> bagageByVolId = getBagageByVolId(lastVolId);
         assertTrue(bagageByVolId.stream().anyMatch(Baggage::isDelivre), "Il n'y a pas de bagage délivré");
         assertTrue(bagageByVolId.stream().anyMatch(b -> !b.isDelivre()),
@@ -87,7 +87,7 @@ class CatalogueBagageTest extends CatalogueTest {
 
     @Test
     void getBagagesNonRecuperesByVolId() {
-        String lastVolId = vols[vols.length-1].getId();
+        String lastVolId = flights[flights.length-1].getId();
         Collection<Baggage> bagageByVolId = getBagageByVolId(lastVolId);
         assertTrue(bagageByVolId.stream().anyMatch(Baggage::isRecupere), "Il " +
                 "n'y a pas de bagage récupéré");

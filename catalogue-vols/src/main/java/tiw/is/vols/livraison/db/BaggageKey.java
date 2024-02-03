@@ -1,6 +1,6 @@
 package tiw.is.vols.livraison.db;
 
-import tiw.is.vols.livraison.model.Vol;
+import tiw.is.vols.livraison.model.Flight;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -9,23 +9,23 @@ import java.util.Objects;
 public class BaggageKey implements Serializable {
     @Serial
     private static final long serialVersionUID = 1779876715614136070L;
-    private Vol vol;
+    private Flight flight;
     private int numero;
 
     public BaggageKey() {
     }
 
-    public BaggageKey(Vol vol, int numero) {
-        this.vol = vol;
+    public BaggageKey(Flight flight, int numero) {
+        this.flight = flight;
         this.numero = numero;
     }
 
-    public Vol getVol() {
-        return vol;
+    public Flight getFlight() {
+        return flight;
     }
 
-    public void setVol(Vol vol) {
-        this.vol = vol;
+    public void setFlight(Flight flight) {
+        this.flight = flight;
     }
 
     public int getNumero() {
@@ -41,11 +41,11 @@ public class BaggageKey implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         BaggageKey baggageKey = (BaggageKey) o;
-        return numero == baggageKey.numero && vol.equals(baggageKey.vol);
+        return numero == baggageKey.numero && flight.equals(baggageKey.flight);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(vol, numero);
+        return Objects.hash(flight, numero);
     }
 }

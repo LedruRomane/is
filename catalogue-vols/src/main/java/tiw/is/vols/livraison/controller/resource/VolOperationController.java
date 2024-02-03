@@ -2,10 +2,10 @@ package tiw.is.vols.livraison.controller.resource;
 
 import tiw.is.vols.livraison.dao.CatalogCompany;
 import tiw.is.vols.livraison.dao.CatalogueVol;
-import tiw.is.vols.livraison.dto.VolDTO;
+import tiw.is.vols.livraison.dto.FlightDTO;
 import tiw.is.vols.livraison.exception.ResourceNotFoundException;
 import tiw.is.vols.livraison.model.Company;
-import tiw.is.vols.livraison.model.Vol;
+import tiw.is.vols.livraison.model.Flight;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -32,8 +32,8 @@ public class VolOperationController {
      *
      * @return la liste contenant des DTO de vols
      */
-    public Collection<VolDTO> getVols() {
-        return dao.getVols().stream().map(VolDTO::fromVol).toList();
+    public Collection<FlightDTO> getVols() {
+        return dao.getVols().stream().map(FlightDTO::fromFlight).toList();
     }
 
     /**
@@ -42,12 +42,12 @@ public class VolOperationController {
      * @param dto le dto du vol cherché
      * @return le vol ou null s'il n'a pas été trouvé
      */
-    public VolDTO getVol(VolDTO dto) throws ResourceNotFoundException {
+    public FlightDTO getVol(FlightDTO dto) throws ResourceNotFoundException {
         String id = dto.id();
-        Vol vol = Optional.ofNullable(dao.getVol(id)).orElseThrow(
-                () -> new ResourceNotFoundException("Le vol " + id + " n'existe pas.")
+        Flight flight = Optional.ofNullable(dao.getVol(id)).orElseThrow(
+                () -> new ResourceNotFoundException("Le flight " + id + " n'existe pas.")
         );
-        return VolDTO.fromVol(vol);
+        return FlightDTO.fromFlight(flight);
     }
 
     /**
@@ -55,21 +55,21 @@ public class VolOperationController {
      *
      * @param voldto le DTO du vol à sauvegarder
      */
-    public void updateVol(VolDTO voldto) throws ResourceNotFoundException {
+    public void updateVol(FlightDTO voldto) throws ResourceNotFoundException {
         Company company = Optional.ofNullable(daoCompanie.getCompany(voldto.company())).orElseThrow(
                 () -> new ResourceNotFoundException("La compagnie " + voldto.company() + " n'existe pas.")
         );
-        dao.saveVol(new Vol(voldto.id(), company, voldto.pointLivraisonBagages()));
+        dao.saveVol(new Flight(voldto.id(), company, voldto.pointLivraisonBagages()));
     }
 
     /**
      * Supprime un vol
      *
-     * @param volDto le vol à supprimer
+     * @param flightDto le vol à supprimer
      * @throws ResourceNotFoundException s'il n'existe pas
      */
-    public void deleteVol(VolDTO volDto) throws ResourceNotFoundException {
-        if(!dao.deleteVolById(volDto.id()))
-            throw new ResourceNotFoundException("Le vol " + volDto.id() + " n'existe pas.");
+    public void deleteVol(FlightDTO flightDto) throws ResourceNotFoundException {
+        if(!dao.deleteVolById(flightDto.id()))
+            throw new ResourceNotFoundException("Le vol " + flightDto.id() + " n'existe pas.");
     }
 }

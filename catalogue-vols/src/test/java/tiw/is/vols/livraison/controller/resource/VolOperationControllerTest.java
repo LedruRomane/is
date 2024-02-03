@@ -1,14 +1,14 @@
 /*
-package tiw.is.vols.livraison.controller.resource;
+package tiw.is.flights.livraison.controller.resource;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
-import tiw.is.vols.livraison.dao.CatalogueTest;
-import tiw.is.vols.livraison.dto.VolDTO;
-import tiw.is.vols.livraison.exception.ResourceNotFoundException;
-import tiw.is.vols.livraison.model.Company;
-import tiw.is.vols.livraison.model.Vol;
+import tiw.is.flights.livraison.dao.CatalogueTest;
+import tiw.is.flights.livraison.dto.FlightDTO;
+import tiw.is.flights.livraison.exception.ResourceNotFoundException;
+import tiw.is.flights.livraison.model.Company;
+import tiw.is.flights.livraison.model.Flight;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class VolOperationControllerTest extends CatalogueTest {
     private VolOperationController controller;
-    private final VolDTO dumbVol = new VolDTO("UFO Mogul", "USAF", "Roswell");
+    private final FlightDTO dumbVol = new FlightDTO("UFO Mogul", "USAF", "Roswell");
     @BeforeEach
     public void setup(TestInfo testInfo) {
         super.setup(testInfo);
@@ -26,12 +26,12 @@ public class VolOperationControllerTest extends CatalogueTest {
 
 @Test
     public void getVols() {
-        Collection<VolDTO> vols1 = controller.getVols();
-        for(VolDTO v: vols1) {
-            assertTrue(Arrays.stream(vols).toList().contains(new Vol(v.id(), catalogCompany.getCompany(v.company()), v.pointLivraisonBagages())));
+        Collection<FlightDTO> vols1 = controller.getVols();
+        for(FlightDTO v: vols1) {
+            assertTrue(Arrays.stream(flights).toList().contains(new Flight(v.id(), catalogCompany.getCompany(v.company()), v.pointLivraisonBagages())));
         }
-        for(Vol v: vols) {
-            assertTrue(vols1.contains(VolDTO.fromVol(v)));
+        for(Flight v: flights) {
+            assertTrue(vols1.contains(FlightDTO.fromVol(v)));
         }
     }
 
@@ -39,7 +39,7 @@ public class VolOperationControllerTest extends CatalogueTest {
 @Test
     public void getVol() {
         try {
-            assertEquals(VolDTO.fromVol(vols[0]), controller.getVol(VolDTO.fromVol(vols[0])));
+            assertEquals(FlightDTO.fromVol(flights[0]), controller.getVol(FlightDTO.fromVol(flights[0])));
         } catch (ResourceNotFoundException e) {
             fail();
         }
@@ -61,10 +61,10 @@ public class VolOperationControllerTest extends CatalogueTest {
     @Test
     public void updateVol() {
         String nouveauPointLivraison = "Pétaouchnok";
-        VolDTO dto = new VolDTO(vols[0].getId(), companies[0].getId(), nouveauPointLivraison);
+        FlightDTO dto = new FlightDTO(flights[0].getId(), companies[0].getId(), nouveauPointLivraison);
         try {
             controller.updateVol(dto);
-            assertEquals(catalogueVol.getVol(vols[0].getId()).getPointLivraisonBagages(), nouveauPointLivraison);
+            assertEquals(catalogueVol.getVol(flights[0].getId()).getPointLivraisonBagages(), nouveauPointLivraison);
         } catch (ResourceNotFoundException e) {
             fail(e.getMessage());
         }
@@ -72,7 +72,7 @@ public class VolOperationControllerTest extends CatalogueTest {
 
 @Test
     public void deleteVol() {
-        assertDoesNotThrow(() -> controller.deleteVol(VolDTO.fromVol(vols[0])));
+        assertDoesNotThrow(() -> controller.deleteVol(FlightDTO.fromVol(flights[0])));
         assertThrows(ResourceNotFoundException.class, () -> controller.deleteVol(dumbVol));
     }
 
