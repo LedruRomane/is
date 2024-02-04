@@ -94,34 +94,6 @@ public class ServeurImpl implements Serveur {
             loadComponents(configJson.getJsonObject(app).getJsonArray("persistence-components"));
             loadComponents(configJson.getJsonObject(app).getJsonArray("data-components"));
             loadComponents(configJson.getJsonObject(app).getJsonArray("handlers-components"));
-
-
-            // todo: start.
-            // Create the handler service locator and register it.
-            // maybe we need a disambiguation using the Parameter Object ?
-            Map<Class, ICommandHandler> handlerLocator = new HashMap<>();
-            // todo: modify this into the conf file. All handlers with their command should be passed into handlerLocator services
-            // pattern Annuaire : pattern service locator ?
-            handlerLocator.put(CreateCompanyCommand.class, picoContainer.getComponent(CreateCompanyCommandHandler.class));
-            handlerLocator.put(GetCompanyCommand.class, picoContainer.getComponent(GetCompanyCommandHandler.class));
-            handlerLocator.put(GetCompaniesCommand.class, picoContainer.getComponent(GetCompaniesCommandHandler.class));
-            handlerLocator.put(DeleteCompanyCommand.class, picoContainer.getComponent(DeleteCompanyCommandHandler.class));
-            handlerLocator.put(CreateOrUpdateFlightCommand.class, picoContainer.getComponent(CreateOrUpdateFlightCommandHandler.class));
-            handlerLocator.put(GetFlightsCommand.class, picoContainer.getComponent(GetFlightsCommandHandler.class));
-            handlerLocator.put(GetFlightCommand.class, picoContainer.getComponent(GetFlightCommandHandler.class));
-            handlerLocator.put(DeleteFlightCommand.class, picoContainer.getComponent(DeleteFlightCommandHandler.class));
-            handlerLocator.put(GetBaggagesCommand.class, picoContainer.getComponent(GetBaggagesCommandHandler.class));
-            handlerLocator.put(GetBaggageCommand.class, picoContainer.getComponent(GetBaggageCommandHandler.class));
-            handlerLocator.put(DeleteBaggageCommand.class, picoContainer.getComponent(DeleteBaggageCommandHandler.class));
-            handlerLocator.put(CreateBaggageCommand.class, picoContainer.getComponent(CreateBaggageCommandHandler.class));
-            handlerLocator.put(DeliverBaggageCommand.class, picoContainer.getComponent(DeliverBaggageCommandHandler.class));
-            handlerLocator.put(RetrievalBaggageCommand.class, picoContainer.getComponent(RetrievalBaggageCommandHandler.class));
-            handlerLocator.put(CloseShipmentCommand.class, picoContainer.getComponent(CloseShipmentCommandHandler.class));
-            handlerLocator.put(GetLostBaggagesCommand.class, picoContainer.getComponent(GetLostBaggagesCommandHandler.class));
-            handlerLocator.put(GetUnclaimedBaggagesCommand.class, picoContainer.getComponent(GetUnclaimedBaggagesCommandHandler.class));
-
-            picoContainer.addComponent(handlerLocator);
-
             loadComponents(configJson.getJsonObject(app).getJsonArray("middleware-components"));
 
             // Create middleware queue we need for commandbus :

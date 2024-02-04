@@ -2,12 +2,20 @@ package tiw.is.server.service;
 
 import jakarta.json.JsonArray;
 import jakarta.json.JsonObject;
+import jakarta.json.JsonValue;
 import org.picocontainer.MutablePicoContainer;
+import tiw.is.vols.livraison.infrastructure.commandBus.ICommandHandler;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ComponentLoader {
+
+    private ComponentLoader() {}
 
     public static void load(JsonObject component, MutablePicoContainer picoContainer) {
         String className = component.getString("class-name");
@@ -40,10 +48,42 @@ public class ComponentLoader {
                 return;
             }
 
+            if (component.containsKey("type") && component.get("type").toString().equals("\"handler-locator\"")) {
+                // Instantiate the locator:
+                Map<Class, ICommandHandler> handlerLocator = new HashMap<>();
+                JsonArray handlers =  component.getJsonArray("arguments");
+
+                for (JsonValue handler : handlers) {
+                    String rawHandlerClass = handler.asJsonObject().getString("class-name");
+                    Class<ICommandHandler> handlerClass = (Class<ICommandHandler>) Class.forName(rawHandlerClass);
+                    // Register the handler as component in the container:
+                    picoContainer.addComponent(handlerClass);
+                    // Register the handler component in the locator:
+                    handlerLocator.put(getCommandFromHandler(handlerClass), picoContainer.getComponent(handlerClass));
+                }
+
+                return;
+            }
+
             picoContainer.addComponent(clazz);
         } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException |
                  InvocationTargetException | InstantiationException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    static Class getCommandFromHandler(Class<ICommandHandler> handlerClass) throws ClassNotFoundException {
+        return Class.forName(getHandlerInterface(handlerClass).getActualTypeArguments()[1].getTypeName());
+    }
+
+    static ParameterizedType getHandlerInterface(Class<?> myClass) {
+        Type[] interfaces =  myClass.getGenericInterfaces();
+        for (Type type : interfaces) {
+            if (type instanceof ParameterizedType && ((ParameterizedType) type).getRawType().getTypeName().equals(ICommandHandler.class.getTypeName())) {
+                return (ParameterizedType) type;
+            }
+        }
+
+        return null;
     }
 }
