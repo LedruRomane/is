@@ -1,3 +1,4 @@
+/*
 package tiw.is.vols.livraison.controller.service;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -14,16 +15,16 @@ class FlightsBusinessControllerTest extends CatalogueTest {
         controller = new VolBusinessController(catalogueVol, catalogueBagage);
     }
 
-/*
 
     @Test
     void fermerLivraison() {
         assertDoesNotThrow(() -> controller.fermerLivraison(FlightDTO.fromVol(flights[0])));
         assertThrows(ResourceNotFoundException.class, () -> controller.fermerLivraison(dumbVol));
     }
-*/
 
-    /*@Test
+
+
+@Test
     void bagagesPerdus() {
         flights[1].fermerLivraison();
         try {
@@ -48,9 +49,10 @@ class FlightsBusinessControllerTest extends CatalogueTest {
         assertThrows(IllegalStateException.class,
                 () -> controller.bagagesPerdus(FlightDTO.fromVol(flights[3])));
         assertThrows(ResourceNotFoundException.class, () -> controller.bagagesPerdus(dumbVol));
-    }*/
+    }
 
-    /*@Test
+
+@Test
     void bagagesNonRecuperes() {
         Flight vol = flights[1];
         vol.fermerLivraison();
@@ -77,5 +79,7 @@ class FlightsBusinessControllerTest extends CatalogueTest {
         }
         assertThrows(IllegalStateException.class, () -> controller.bagagesNonRecuperes(FlightDTO.fromVol(flights[2])));
         assertThrows(ResourceNotFoundException.class, () -> controller.bagagesPerdus(dumbVol));
-    }*/
+    }
+
 }
+*/

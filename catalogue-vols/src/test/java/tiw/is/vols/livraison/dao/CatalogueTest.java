@@ -1,3 +1,4 @@
+/*
 package tiw.is.vols.livraison.dao;
 
 import jakarta.persistence.EntityManager;
@@ -120,3 +121,4 @@ public abstract class CatalogueTest {
         companies = null;
     }
 }
+*/

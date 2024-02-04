@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import tiw.is.server.ServeurImpl;
 import tiw.is.server.db.FixturesManager;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,10 +18,11 @@ public class FlightTest extends FixturesManager {
     private static ServeurImpl serveurImpl;
     private final static Logger LOG = LoggerFactory.getLogger(FlightTest.class);
     private final Map<String, Object> voidParams = new HashMap<>();
+    private final String resource = "flight";
 
 
     @BeforeAll
-    public static void setupClass() {
+    public static void setupClass() throws IOException {
         serveurImpl = new ServeurImpl();
     }
 
@@ -37,7 +39,7 @@ public class FlightTest extends FixturesManager {
         params.put("companyId", "company1");
         params.put("pointLivraisonBagages", "Guéret");
 
-        String result = (String) serveurImpl.processRequest(command, params);
+        String result = (String) serveurImpl.processRequest(resource, command, params);
         LOG.info(result);
         assertEquals("{\"id\":\"v-new\",\"company\":\"company1\",\"pointLivraisonBagages\":\"Guéret\"}", result);
     }
@@ -50,7 +52,7 @@ public class FlightTest extends FixturesManager {
         params.put("companyId", "company2");
         params.put("pointLivraisonBagages", "Pétaouchnok");
 
-        String result = (String) serveurImpl.processRequest(command, params);
+        String result = (String) serveurImpl.processRequest(resource, command, params);
         LOG.info(result);
         assertEquals("{\"id\":\"vol1\",\"company\":\"company2\",\"pointLivraisonBagages\":\"Pétaouchnok\"}", result);
     }
@@ -59,7 +61,7 @@ public class FlightTest extends FixturesManager {
     void getFlights() {
         String command = "getFlights";
 
-        String result = (String) serveurImpl.processRequest(command, voidParams);
+        String result = (String) serveurImpl.processRequest(resource, command, voidParams);
         LOG.info(result);
         assertEquals("[{\"id\":\"vol1\",\"company\":\"company1\",\"pointLivraisonBagages\":\"Paris\"},{\"id\":\"vol2\",\"company\":\"company1\",\"pointLivraisonBagages\":\"Lyon\"},{\"id\":\"vol3\",\"company\":\"company2\",\"pointLivraisonBagages\":\"Budapest\"},{\"id\":\"vol4\",\"company\":\"company2\",\"pointLivraisonBagages\":\"London\"}]", result);
     }
@@ -70,7 +72,7 @@ public class FlightTest extends FixturesManager {
         Map<String, Object> params = new HashMap<>();
         params.put("id", "vol1");
 
-        String result = (String) serveurImpl.processRequest(command, params);
+        String result = (String) serveurImpl.processRequest(resource, command, params);
         LOG.info(result);
         assertEquals("{\"id\":\"vol1\",\"company\":\"company1\",\"pointLivraisonBagages\":\"Paris\"}", result);
     }
@@ -81,7 +83,7 @@ public class FlightTest extends FixturesManager {
         Map<String, Object> params = new HashMap<>();
         params.put("id", "vol1");
 
-        String result = (String) serveurImpl.processRequest(command, params);
+        String result = (String) serveurImpl.processRequest(resource, command, params);
         LOG.info(result);
         assertEquals("true", result);
         //todo: assert the flight isn't in database anymore ?

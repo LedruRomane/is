@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import tiw.is.server.ServeurImpl;
 import tiw.is.server.db.FixturesManager;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,9 +17,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class FlightBusinessTest extends FixturesManager {
     private static ServeurImpl serveurImpl;
     private final static Logger LOG = LoggerFactory.getLogger(FlightBusinessTest.class);
+    private final String resource = "flightBusiness";
+
 
     @BeforeAll
-    public static void setupClass() {
+    public static void setupClass() throws IOException {
         serveurImpl = new ServeurImpl();
     }
 
@@ -33,7 +36,7 @@ public class FlightBusinessTest extends FixturesManager {
         Map<String, Object> params = new HashMap<>();
         params.put("id", "vol1");
 
-        String result = (String) serveurImpl.processRequest(command, params);
+        String result = (String) serveurImpl.processRequest(resource, command, params);
         LOG.info(result);
         assertEquals("true", result);
 
@@ -46,7 +49,7 @@ public class FlightBusinessTest extends FixturesManager {
         Map<String, Object> params = new HashMap<>();
         params.put("id", "vol3");
 
-        String result = (String) serveurImpl.processRequest(command, params);
+        String result = (String) serveurImpl.processRequest(resource, command, params);
         LOG.info(result);
         assertEquals("[{\"flightId\":\"vol3\",\"numero\":23,\"weight\":2.0,\"passenger\":\"Lost\"}]", result);
     }
@@ -57,7 +60,7 @@ public class FlightBusinessTest extends FixturesManager {
         Map<String, Object> params = new HashMap<>();
         params.put("id", "vol3");
 
-        String result = (String) serveurImpl.processRequest(command, params);
+        String result = (String) serveurImpl.processRequest(resource, command, params);
         LOG.info(result);
         assertEquals("[{\"flightId\":\"vol3\",\"numero\":22,\"weight\":2.0,\"passenger\":\"Unclaimed\"}]", result);
     }

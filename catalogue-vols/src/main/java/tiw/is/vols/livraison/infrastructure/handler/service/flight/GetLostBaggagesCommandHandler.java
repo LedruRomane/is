@@ -4,7 +4,6 @@ import tiw.is.vols.livraison.dao.BaggageDao;
 import tiw.is.vols.livraison.dao.FlightDao;
 import tiw.is.vols.livraison.dto.BaggageDTO;
 import tiw.is.vols.livraison.exception.ResourceNotFoundException;
-import tiw.is.vols.livraison.infrastructure.command.service.flight.CloseShipmentCommand;
 import tiw.is.vols.livraison.infrastructure.command.service.flight.GetLostBaggagesCommand;
 import tiw.is.vols.livraison.infrastructure.commandBus.ICommandHandler;
 import tiw.is.vols.livraison.model.Flight;

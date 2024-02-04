@@ -7,21 +7,21 @@ public interface IDataAccessObject<O> {
 
     public Collection<O> getAll();
 
-    default public O getOneById(String id) {
+    default O getOneById(String id) {
         throw new UnsupportedOperationException("Not implemented");
     }
 
-    default public O getOneById(String id, int num) {
+    default O getOneById(String id, int num) {
         throw new UnsupportedOperationException("Not implemented");
     }
 
-    public O save(O object);
+    O save(O object);
 
-    default public boolean deleteOneById(String id) {
+    default boolean deleteOneById(String id) {
         throw new UnsupportedOperationException("Not implemented");
     }
 
-    default public boolean deleteOneById(String id, int num) {
+    default boolean deleteOneById(String id, int num) {
         throw new UnsupportedOperationException("Not implemented");
     }
 }

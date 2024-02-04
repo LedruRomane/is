@@ -1,6 +1,8 @@
 package tiw.is.vols.livraison.infrastructure.commandBus;
 
-import tiw.is.vols.livraison.dao.IDataAccessObject;
+import org.picocontainer.Startable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @param <R> type of return value (Company, Baggage, or Collections, boolean, etc.)
@@ -8,7 +10,15 @@ import tiw.is.vols.livraison.dao.IDataAccessObject;
  *
  * @see <a href="https://github.com/cloudogu/command-bus/blob/develop/command-bus-core/src/main/java/com/cloudogu/cb/CommandHandler.java">...</a>
  */
-public interface ICommandHandler<R, C> {
+public interface ICommandHandler<R, C> extends Startable {
+    Logger logger = LoggerFactory.getLogger(ICommandHandler.class);
 
-    public R handle(C command) throws Exception;
+    R handle(C command) throws Exception;
+
+
+    default void start() {
+        logger.info("Composant démarré : {}", this.getClass().getName());
+    }
+
+    default void stop() {}
 }

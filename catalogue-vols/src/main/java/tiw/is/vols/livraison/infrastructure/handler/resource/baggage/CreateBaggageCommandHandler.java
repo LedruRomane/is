@@ -10,12 +10,16 @@ import tiw.is.vols.livraison.infrastructure.commandBus.ICommandHandler;
 import tiw.is.vols.livraison.model.Baggage;
 import tiw.is.vols.livraison.model.Flight;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Handler that provide the Creation of a company.
  * We inject the controller that provide the operations for the creation.
  * Should implement the HandlerInterface to ensure a strong typing check.
  */
 public class CreateBaggageCommandHandler implements ICommandHandler<BaggageDTO, CreateBaggageCommand> {
+    static final Logger logger = LoggerFactory.getLogger(CreateBaggageCommandHandler.class);
 
     private final BaggageDao dao;
     private final FlightDao flightDao;

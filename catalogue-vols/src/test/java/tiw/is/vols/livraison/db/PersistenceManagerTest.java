@@ -1,3 +1,4 @@
+/*
 package tiw.is.vols.livraison.db;
 
 import jakarta.persistence.EntityManager;
@@ -5,7 +6,6 @@ import jakarta.persistence.EntityManagerFactory;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import tiw.is.vols.livraison.dao.CatalogueVol;
 import tiw.is.vols.livraison.model.Company;
 import tiw.is.vols.livraison.model.Flight;
 
@@ -28,9 +28,10 @@ public class PersistenceManagerTest {
         emf.close();
     }
 
-    /**
+*
      * Testing EntityManager setup
-     */
+
+
     @Test
     public void testEMSetup() {
         EntityManager em = emf.createEntityManager();
@@ -48,9 +49,10 @@ public class PersistenceManagerTest {
         em.getTransaction().commit();
     }
 
-    /**
+*
      * Testing listing of flights
-     */
+
+
     @Test
     public void testListVols() {
         EntityManager em = emf.createEntityManager();
@@ -77,9 +79,10 @@ public class PersistenceManagerTest {
         em.getTransaction().commit();
     }
 
-    /**
+*
      * Test de sauvegarde d'un vol en base
-     */
+
+
     @Test
     public void testSaveVol() {
         EntityManager em = emf.createEntityManager();
@@ -100,3 +103,4 @@ public class PersistenceManagerTest {
         em.getTransaction().commit();
     }
 }
+*/

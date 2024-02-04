@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import tiw.is.server.ServeurImpl;
 import tiw.is.server.db.FixturesManager;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,12 +17,13 @@ public class CompanyTest extends FixturesManager {
     private static ServeurImpl serveurImpl;
     private final static Logger LOG = LoggerFactory.getLogger(CompanyTest.class);
     private final Map<String, Object> voidParams = new HashMap<>();
+    private final String resource = "company";
 
     private final String companyID = "company1";
 
 
     @BeforeAll
-    public static void setupClass() {
+    public static void setupClass() throws IOException {
         serveurImpl = new ServeurImpl();
     }
 
@@ -37,7 +39,7 @@ public class CompanyTest extends FixturesManager {
         String newID = "c-new";
         params.put("id", newID);
 
-        String result = (String) serveurImpl.processRequest(command, params);
+        String result = (String) serveurImpl.processRequest(resource, command, params);
         LOG.info(result);
         assertEquals("{\"id\":\""+ newID +"\"}", result);
     }
@@ -48,7 +50,7 @@ public class CompanyTest extends FixturesManager {
         Map<String, Object> params = new HashMap<>();
         params.put("id", this.companyID);
 
-        String result = (String) serveurImpl.processRequest(command, params);
+        String result = (String) serveurImpl.processRequest(resource, command, params);
         LOG.info(result);
         assertEquals("{\"id\":\""+ this.companyID +"\"}", result);
     }
@@ -57,7 +59,7 @@ public class CompanyTest extends FixturesManager {
     void getCompanies() {
         String command = "getCompanies";
 
-        String result = (String) serveurImpl.processRequest(command, voidParams);
+        String result = (String) serveurImpl.processRequest(resource, command, voidParams);
         LOG.info(result);
         assertEquals("[{\"id\":\"company1\"},{\"id\":\"company2\"}]", result);
     }
@@ -68,7 +70,7 @@ public class CompanyTest extends FixturesManager {
         Map<String, Object> params = new HashMap<>();
         params.put("id", this.companyID);
 
-        String result = (String) serveurImpl.processRequest(command, params);
+        String result = (String) serveurImpl.processRequest(resource, command, params);
 
         LOG.info(result);
         assertEquals("true", result);

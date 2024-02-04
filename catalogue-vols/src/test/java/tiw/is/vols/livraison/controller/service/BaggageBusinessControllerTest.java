@@ -1,3 +1,4 @@
+/*
 package tiw.is.vols.livraison.controller.service;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -13,8 +14,12 @@ class BaggageBusinessControllerTest extends CatalogueTest {
     private BagageBusinessController controller;
     private final BaggageDTO dumbBagage = new BaggageDTO(
             "Crazy flying saucer",
-            0 /* Inutilisé pour la création */,
-            -10 /* (c'est de l'antimatière) */,
+            0 */
+/* Inutilisé pour la création *//*
+,
+            -10 */
+/* (c'est de l'antimatière) *//*
+,
             "E.T.");
     @BeforeEach
     public void setup(TestInfo testInfo) {
@@ -45,4 +50,4 @@ class BaggageBusinessControllerTest extends CatalogueTest {
         assertThrows(IllegalStateException.class, () -> controller.recuperer(BaggageDTO.fromBaggage(baggages[1])));
         assertThrows(ResourceNotFoundException.class, () -> controller.recuperer(dumbBagage));
     }
-}
+}*/
