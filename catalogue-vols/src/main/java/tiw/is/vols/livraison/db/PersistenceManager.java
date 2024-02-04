@@ -2,15 +2,21 @@ package tiw.is.vols.livraison.db;
 
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
+import org.picocontainer.Startable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import tiw.is.vols.livraison.infrastructure.commandBus.ICommandHandler;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class PersistenceManager {
+public class PersistenceManager implements Startable {
     private String dbHost;
     private String dbName;
     private String dbUser;
     private String dbPassword;
+    Logger logger = LoggerFactory.getLogger(PersistenceManager.class);
+
 
     public PersistenceManager() {}
     public PersistenceManager(String dbHost, String dbName, String dbUser, String dbPassword) {
@@ -19,6 +25,14 @@ public class PersistenceManager {
         this.dbUser = dbUser;
         this.dbPassword = dbPassword;
     }
+
+    @Override
+    public void start() {
+        logger.info("Composant démarré : {}", this.getClass().getName());
+    }
+
+    @Override
+    public void stop() {}
 
     public EntityManagerFactory createEntityManagerFactory() {
         String dbHost = System.getenv().getOrDefault("DB_HOST", this.dbHost);

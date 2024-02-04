@@ -1,4 +1,4 @@
-package tiw.is.server.db;
+package tiw.is.server.utils;
 
 import jakarta.persistence.EntityManager;
 import org.hibernate.Session;
@@ -10,7 +10,9 @@ import java.sql.Statement;
 
 public abstract class FixturesManager {
 
-    public void resetDatabase(EntityManager em) throws Exception {
+    private FixturesManager() {}
+
+    public static void resetDatabase(EntityManager em) throws Exception {
         Session session = em.unwrap(Session.class);
 
         try {String sql = new String(Files.readAllBytes(Paths.get("./init.sql")));

@@ -13,7 +13,8 @@ import org.picocontainer.lifecycle.StartableLifecycleStrategy;
 import org.picocontainer.monitors.NullComponentMonitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import tiw.is.vols.livraison.db.PersistenceManager;
+import tiw.is.server.service.ComponentLoader;
+import tiw.is.server.utils.FixturesManager;
 import tiw.is.vols.livraison.infrastructure.command.resource.baggage.CreateBaggageCommand;
 import tiw.is.vols.livraison.infrastructure.command.resource.baggage.DeleteBaggageCommand;
 import tiw.is.vols.livraison.infrastructure.command.resource.baggage.GetBaggageCommand;
@@ -80,10 +81,9 @@ public class ServeurImpl implements Serveur {
         String app = "application-config";
         JsonObject configJson;
 
-        ComponentMonitor monitor = new NullComponentMonitor();
         this.picoContainer = new PicoBuilder(new ConstructorInjection())
                 .withCaching()
-                .withLifecycle(new StartableLifecycleStrategy(monitor))
+                .withLifecycle(new StartableLifecycleStrategy(new NullComponentMonitor()))
                 .build();
 
         String configContent = new String(Files.readAllBytes(Paths.get("src/main/resources/appConfiguration.json")));
@@ -95,11 +95,13 @@ public class ServeurImpl implements Serveur {
             loadComponents(configJson.getJsonObject(app).getJsonArray("data-components"));
             loadComponents(configJson.getJsonObject(app).getJsonArray("handlers-components"));
 
+
+            // todo: start.
             // Create the handler service locator and register it.
             // maybe we need a disambiguation using the Parameter Object ?
             Map<Class, ICommandHandler> handlerLocator = new HashMap<>();
             // todo: modify this into the conf file. All handlers with their command should be passed into handlerLocator services
-            // pattern Annuaire : pattern service locator ;)
+            // pattern Annuaire : pattern service locator ?
             handlerLocator.put(CreateCompanyCommand.class, picoContainer.getComponent(CreateCompanyCommandHandler.class));
             handlerLocator.put(GetCompanyCommand.class, picoContainer.getComponent(GetCompanyCommandHandler.class));
             handlerLocator.put(GetCompaniesCommand.class, picoContainer.getComponent(GetCompaniesCommandHandler.class));
@@ -130,52 +132,20 @@ public class ServeurImpl implements Serveur {
             // Create the command bus service and register it.-
             picoContainer.addComponent(new CommandBus(middleware));
 
+            // todo: end.
+
             LOG.info("---------------------------  [SERVER INFO: START]  ---------------------------");
             picoContainer.start();
         }
     }
 
     /**
-     * For all components, add Component to picoContainer.
+     * For all components, add Components to picoContainer.
      * @param array JsonArray from configuration file.
      */
     private void loadComponents(JsonArray array) {
         array.forEach(component -> {
-            JsonObject current = (JsonObject) component;
-            String className = current.getString("class-name");
-
-            try {
-                if (current.containsKey("factory-type") && current.containsKey("factory-method")) {
-                    String factoryType = current.getString("factory-type");
-                    String factoryMethod = current.getString("factory-method");
-
-                    Class<?> factoryClass = Class.forName(factoryType);
-                    Object factoryInstance = picoContainer.getComponent(factoryClass);
-
-                    Method method = factoryClass.getMethod(factoryMethod);
-                    Object instance = method.invoke(factoryInstance);
-
-                    picoContainer.addComponent(instance);
-                } else {
-                    Class<?> clazz = Class.forName(className);
-                    if (current.containsKey("params")) {
-                        JsonArray params = current.getJsonArray("params");
-                        Object[] constructorArgs = new Object[params.size()];
-
-                        for (int i = 0; i < params.size(); i++) {
-                            JsonObject param = params.getJsonObject(i);
-                            constructorArgs[i] = param.getString("value");
-                        }
-
-                        picoContainer.addComponent(clazz, clazz.getConstructor(String.class, String.class, String.class, String.class).newInstance(constructorArgs));
-                    } else {
-                        picoContainer.addComponent(clazz);
-                    }
-                }
-            } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException |
-                     InvocationTargetException | InstantiationException e) {
-                throw new RuntimeException(e);
-            }
+            ComponentLoader.load((JsonObject) component, this.picoContainer);
         });
     }
 
@@ -202,130 +172,107 @@ public class ServeurImpl implements Serveur {
         }
     }
 
-    /*
-    ----
-    All these method can be merged into one, we'll keep it this way to ensure a great lisibility and respect the processRequest signature (for TP)
-    ---
-    */
-    private Object dispatchCompanyResource(String command, Map<String, Object> params) {
-        try {
-            return switch (command) {
-                case "createCompany" -> formatter.serializeObject(
-                        this.getCommandBus().handle(new CreateCompanyCommand((String) params.get("id")))
-                );
-                case "getCompany" -> formatter.serializeObject(
-                        this.getCommandBus().handle(new GetCompanyCommand((String) params.get("id")))
-                );
-                case "getCompanies" -> formatter.serializeObject(
-                        this.getCommandBus().handle(new GetCompaniesCommand())
-                );
-                case "deleteCompany" -> formatter.serializeObject(
-                        this.getCommandBus().handle(new DeleteCompanyCommand((String) params.get("id")))
-                );
-                default -> throw new CommandNotFoundException(command + " does not exist.");
-            };
-        } catch (Exception e) {
-            LOG.error(e.getMessage(), e);
-            return "KO"; // Simulate an http error return.
-        }
+    /* --------------------  Dispatchers -------------------- */
+
+    private Object dispatchCompanyResource(String command, Map<String, Object> params) throws Exception {
+        return switch (command) {
+            case "create" -> formatter.serializeObject(
+                    this.getCommandBus().handle(new CreateCompanyCommand((String) params.get("id")))
+            );
+            case "get" -> formatter.serializeObject(
+                    this.getCommandBus().handle(new GetCompanyCommand((String) params.get("id")))
+            );
+            case "getAll" -> formatter.serializeObject(
+                    this.getCommandBus().handle(new GetCompaniesCommand())
+            );
+            case "delete" -> formatter.serializeObject(
+                    this.getCommandBus().handle(new DeleteCompanyCommand((String) params.get("id")))
+            );
+            default -> throw new CommandNotFoundException(command + " does not exist.");
+        };
     }
 
-    private Object dispatchFlightResource(String command, Map<String, Object> params) {
-        try {
-            return switch (command) {
-                case "createFlight", "updateFlight" -> formatter.serializeObject(
-                        this.getCommandBus().handle(new CreateOrUpdateFlightCommand(
-                                (String) params.get("id"),
-                                (String) params.get("companyId"),
-                                (String) params.get("pointLivraisonBagages")
-                        ))
-                );
-                case "getFlights" -> formatter.serializeObject(
-                        this.getCommandBus().handle(new GetFlightsCommand())
-                );
-                case "getFlight" -> formatter.serializeObject(
-                        this.getCommandBus().handle(new GetFlightCommand((String) params.get("id")))
-                );
-                case "deleteFlight" -> formatter.serializeObject(
-                        this.getCommandBus().handle(new DeleteFlightCommand((String) params.get("id")))
-                );
-                default -> throw new CommandNotFoundException(command + " does not exist.");
-            };
-        } catch (Exception e) {
-            LOG.error(e.getMessage(), e);
-            return "KO"; // Simulate an http error return.
-        }
-    }
-    private Object dispatchBaggageResource(String command, Map<String, Object> params) {
-        try {
-            return switch (command) {
-                case "createBaggage" -> formatter.serializeObject(
-                        this.getCommandBus().handle(new CreateBaggageCommand(
-                                (String) params.get("id"),
-                                (String) params.get("weight"),
-                                (String) params.get("passenger")
-                        ))
-                );
-                case "getBaggages" -> formatter.serializeObject(
-                        this.getCommandBus().handle(new GetBaggagesCommand())
-                );
-                case "getBaggage" -> formatter.serializeObject(
-                        this.getCommandBus().handle(new GetBaggageCommand(
-                                (String) params.get("id"),
-                                (int) params.get("num")
-                        ))
-                );
-                case "deleteBaggage" -> formatter.serializeObject(
-                        this.getCommandBus().handle(new DeleteBaggageCommand(
-                                (String) params.get("id"),
-                                (int) params.get("num")
-                        ))
-                );
-                default -> throw new CommandNotFoundException(command + " does not exist.");
-            };
-        } catch (Exception e) {
-            LOG.error(e.getMessage(), e);
-            return "KO"; // Simulate an http error return.
-        }
+    private Object dispatchFlightResource(String command, Map<String, Object> params) throws Exception {
+        return switch (command) {
+            case "create", "update" -> formatter.serializeObject(
+                    this.getCommandBus().handle(new CreateOrUpdateFlightCommand(
+                            (String) params.get("id"),
+                            (String) params.get("companyId"),
+                            (String) params.get("pointLivraisonBagages")
+                    ))
+            );
+            case "getAll" -> formatter.serializeObject(
+                    this.getCommandBus().handle(new GetFlightsCommand())
+            );
+            case "get" -> formatter.serializeObject(
+                    this.getCommandBus().handle(new GetFlightCommand((String) params.get("id")))
+            );
+            case "delete" -> formatter.serializeObject(
+                    this.getCommandBus().handle(new DeleteFlightCommand((String) params.get("id")))
+            );
+            default -> throw new CommandNotFoundException(command + " does not exist.");
+        };
     }
 
-    private Object dispatch(String command, Map<String, Object> params) {
-        try {
-            return switch (command) {
-                case "deliver" -> formatter.serializeObject(
-                        this.getCommandBus().handle(new DeliverBaggageCommand(
-                                (String) params.get("id"),
-                                (int) params.get("num")
-                        ))
-                );
-                case "retrieval" -> formatter.serializeObject(
-                        this.getCommandBus().handle(new RetrievalBaggageCommand(
-                                (String) params.get("id"),
-                                (int) params.get("num")
-                        ))
-                );
-                case "closeShipment" -> formatter.serializeObject(
-                        this.getCommandBus().handle(new CloseShipmentCommand(
-                                (String) params.get("id")
-                        ))
-                );
-                case "getLostBaggages" -> formatter.serializeObject(
-                        this.getCommandBus().handle(new GetLostBaggagesCommand(
-                                (String) params.get("id")
-                        ))
-                );
-                case "getUnclaimedBaggages" -> formatter.serializeObject(
-                        this.getCommandBus().handle(new GetUnclaimedBaggagesCommand(
-                                (String) params.get("id")
-                        ))
-                );
-                default -> throw new CommandNotFoundException(command + " does not exist.");
-            };
+    private Object dispatchBaggageResource(String command, Map<String, Object> params) throws Exception {
+        return switch (command) {
+            case "create" -> formatter.serializeObject(
+                    this.getCommandBus().handle(new CreateBaggageCommand(
+                            (String) params.get("id"),
+                            (String) params.get("weight"),
+                            (String) params.get("passenger")
+                    ))
+            );
+            case "getAll" -> formatter.serializeObject(
+                    this.getCommandBus().handle(new GetBaggagesCommand())
+            );
+            case "get" -> formatter.serializeObject(
+                    this.getCommandBus().handle(new GetBaggageCommand(
+                            (String) params.get("id"),
+                            (int) params.get("num")
+                    ))
+            );
+            case "delete" -> formatter.serializeObject(
+                    this.getCommandBus().handle(new DeleteBaggageCommand(
+                            (String) params.get("id"),
+                            (int) params.get("num")
+                    ))
+            );
+            default -> throw new CommandNotFoundException(command + " does not exist.");
+        };
+    }
 
-        } catch (Exception e) {
-            LOG.error(e.getMessage(), e);
-            return "KO"; // Simulate an http error return.
-        }
+    private Object dispatch(String command, Map<String, Object> params) throws Exception {
+        return switch (command) {
+            case "deliver" -> formatter.serializeObject(
+                    this.getCommandBus().handle(new DeliverBaggageCommand(
+                            (String) params.get("id"),
+                            (int) params.get("num")
+                    ))
+            );
+            case "retrieval" -> formatter.serializeObject(
+                    this.getCommandBus().handle(new RetrievalBaggageCommand(
+                            (String) params.get("id"),
+                            (int) params.get("num")
+                    ))
+            );
+            case "closeShipment" -> formatter.serializeObject(
+                    this.getCommandBus().handle(new CloseShipmentCommand(
+                            (String) params.get("id")
+                    ))
+            );
+            case "getLostBaggages" -> formatter.serializeObject(
+                    this.getCommandBus().handle(new GetLostBaggagesCommand(
+                            (String) params.get("id")
+                    ))
+            );
+            case "getUnclaimedBaggages" -> formatter.serializeObject(
+                    this.getCommandBus().handle(new GetUnclaimedBaggagesCommand(
+                            (String) params.get("id")
+                    ))
+            );
+            default -> throw new CommandNotFoundException(command + " does not exist.");
+        };
     }
 
     /**
@@ -337,11 +284,11 @@ public class ServeurImpl implements Serveur {
     }
 
     /**
-     * get EntityManager from current container.
-     * @return EntityManager
+     * Test purpose.
+     * @throws Exception
      */
-    public EntityManager getEntityManager() {
-        return picoContainer.getComponent(EntityManager.class);
+    public void resetDatabase() throws Exception {
+        FixturesManager.resetDatabase(picoContainer.getComponent(EntityManager.class));
     }
 }
 
