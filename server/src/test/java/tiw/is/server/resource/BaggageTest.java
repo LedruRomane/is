@@ -51,7 +51,7 @@ public class BaggageTest extends FixturesManager {
 
         String result = (String) serveurImpl.processRequest(command, voidParams);
         LOG.info(result);
-        assertEquals("[{\"flightId\":\"vol1\",\"numero\":21,\"weight\":2.0,\"passenger\":\"Paul\"},{\"flightId\":\"vol2\",\"numero\":21,\"weight\":2.0,\"passenger\":\"Jack\"},{\"flightId\":\"vol3\",\"numero\":21,\"weight\":2.0,\"passenger\":\"Foo\"},{\"flightId\":\"vol3\",\"numero\":22,\"weight\":2.0,\"passenger\":\"Doh\"},{\"flightId\":\"vol4\",\"numero\":21,\"weight\":2.0,\"passenger\":\"John\"}]", result);
+        assertEquals("[{\"flightId\":\"vol1\",\"numero\":21,\"weight\":2.0,\"passenger\":\"Paul\"},{\"flightId\":\"vol2\",\"numero\":21,\"weight\":2.0,\"passenger\":\"Jack\"},{\"flightId\":\"vol3\",\"numero\":21,\"weight\":2.0,\"passenger\":\"Foo\"},{\"flightId\":\"vol3\",\"numero\":22,\"weight\":2.0,\"passenger\":\"Unclaimed\"},{\"flightId\":\"vol3\",\"numero\":23,\"weight\":2.0,\"passenger\":\"Lost\"},{\"flightId\":\"vol4\",\"numero\":21,\"weight\":2.0,\"passenger\":\"John\"}]", result);
     }
 
     @Test

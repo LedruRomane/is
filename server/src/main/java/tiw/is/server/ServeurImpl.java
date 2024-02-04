@@ -24,6 +24,9 @@ import tiw.is.vols.livraison.infrastructure.command.resource.flight.GetFlightCom
 import tiw.is.vols.livraison.infrastructure.command.resource.flight.GetFlightsCommand;
 import tiw.is.vols.livraison.infrastructure.command.service.baggage.DeliverBaggageCommand;
 import tiw.is.vols.livraison.infrastructure.command.service.baggage.RetrievalBaggageCommand;
+import tiw.is.vols.livraison.infrastructure.command.service.flight.CloseShipmentCommand;
+import tiw.is.vols.livraison.infrastructure.command.service.flight.GetLostBaggagesCommand;
+import tiw.is.vols.livraison.infrastructure.command.service.flight.GetUnclaimedBaggagesCommand;
 import tiw.is.vols.livraison.infrastructure.commandBus.*;
 import tiw.is.vols.livraison.infrastructure.handler.resource.baggage.CreateBaggageCommandHandler;
 import tiw.is.vols.livraison.infrastructure.handler.resource.baggage.DeleteBaggageCommandHandler;
@@ -41,6 +44,9 @@ import tiw.is.vols.livraison.infrastructure.handler.resource.flight.GetFlightCom
 import tiw.is.vols.livraison.infrastructure.handler.resource.flight.GetFlightsCommandHandler;
 import tiw.is.vols.livraison.infrastructure.handler.service.baggage.DeliverBaggageCommandHandler;
 import tiw.is.vols.livraison.infrastructure.handler.service.baggage.RetrievalBaggageCommandHandler;
+import tiw.is.vols.livraison.infrastructure.handler.service.flight.CloseShipmentCommandHandler;
+import tiw.is.vols.livraison.infrastructure.handler.service.flight.GetLostBaggagesCommandHandler;
+import tiw.is.vols.livraison.infrastructure.handler.service.flight.GetUnclaimedBaggagesCommandHandler;
 import tiw.is.vols.livraison.model.Company;
 
 import java.util.ArrayList;
@@ -92,6 +98,9 @@ public class ServeurImpl implements Serveur {
         picoContainer.addComponent(CreateBaggageCommandHandler.class);
         picoContainer.addComponent(DeliverBaggageCommandHandler.class);
         picoContainer.addComponent(RetrievalBaggageCommandHandler.class);
+        picoContainer.addComponent(CloseShipmentCommandHandler.class);
+        picoContainer.addComponent(GetLostBaggagesCommandHandler.class);
+        picoContainer.addComponent(GetUnclaimedBaggagesCommandHandler.class);
 
         // Create the handler service locator and register it.
         // maybe we need a disambiguation using the Parameter Object ?
@@ -112,6 +121,9 @@ public class ServeurImpl implements Serveur {
         handlerLocator.put(CreateBaggageCommand.class, picoContainer.getComponent(CreateBaggageCommandHandler.class));
         handlerLocator.put(DeliverBaggageCommand.class, picoContainer.getComponent(DeliverBaggageCommandHandler.class));
         handlerLocator.put(RetrievalBaggageCommand.class, picoContainer.getComponent(RetrievalBaggageCommandHandler.class));
+        handlerLocator.put(CloseShipmentCommand.class, picoContainer.getComponent(CloseShipmentCommandHandler.class));
+        handlerLocator.put(GetLostBaggagesCommand.class, picoContainer.getComponent(GetLostBaggagesCommandHandler.class));
+        handlerLocator.put(GetUnclaimedBaggagesCommand.class, picoContainer.getComponent(GetUnclaimedBaggagesCommandHandler.class));
 
 
         picoContainer.addComponent(handlerLocator);
@@ -208,6 +220,21 @@ public class ServeurImpl implements Serveur {
                         this.getCommandBus().handle(new RetrievalBaggageCommand(
                                 (String) params.get("id"),
                                 (int) params.get("num")
+                        ))
+                );
+                case "closeShipment" -> formatter.serializeObject(
+                        this.getCommandBus().handle(new CloseShipmentCommand(
+                                (String) params.get("id")
+                        ))
+                );
+                case "getLostBaggages" -> formatter.serializeObject(
+                        this.getCommandBus().handle(new GetLostBaggagesCommand(
+                                (String) params.get("id")
+                        ))
+                );
+                case "getUnclaimedBaggages" -> formatter.serializeObject(
+                        this.getCommandBus().handle(new GetUnclaimedBaggagesCommand(
+                                (String) params.get("id")
                         ))
                 );
                 default -> throw new CommandNotFoundException(command + " does not exist.");

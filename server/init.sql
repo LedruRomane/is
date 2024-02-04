@@ -31,12 +31,13 @@ INSERT INTO company (id) VALUES ('company1'),('company2');
 INSERT INTO flight (id, livraisonencours, nextnumerobagage, company_id, pointlivraisonbagages)
 VALUES ('vol1', true, 22, 'company1', 'Paris'),
        ('vol2', false, 22, 'company1', 'Lyon'),
-       ('vol3', false, 23, 'company2', 'Budapest'),
+       ('vol3', false, 24, 'company2', 'Budapest'),
        ('vol4', true, 22, 'company2', 'London');
 
 INSERT INTO baggage(numero, delivre, weight, recupere, passenger, flight_id)
 VALUES (21, false, 2, false, 'Paul', 'vol1'),
        (21, true, 2, false, 'Jack', 'vol2'),
        (21, true, 2, true, 'Foo', 'vol3'),
-       (22, true, 2, false, 'Doh', 'vol3'),
+       (22, true, 2, false, 'Unclaimed', 'vol3'),
+       (23, false, 2, false, 'Lost', 'vol3'),
        (21, false, 2, false, 'John', 'vol4');

@@ -117,6 +117,7 @@ public class BaggageDao implements IDataAccessObject<Baggage> {
         var dq = em.createQuery(
                 "SELECT b FROM Baggage b" +
                         " WHERE b.flight.id = :vId" +
+                        " AND b.delivre is true" +
                         " AND b.recupere is false", Baggage.class);
         dq.setParameter("vId", flightId);
         return dq.getResultList();

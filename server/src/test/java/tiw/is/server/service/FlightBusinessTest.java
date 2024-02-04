@@ -13,9 +13,9 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class BaggageBusinessTest extends FixturesManager {
+public class FlightBusinessTest extends FixturesManager {
     private static ServeurImpl serveurImpl;
-    private final static Logger LOG = LoggerFactory.getLogger(BaggageBusinessTest.class);
+    private final static Logger LOG = LoggerFactory.getLogger(FlightBusinessTest.class);
 
     @BeforeAll
     public static void setupClass() {
@@ -28,30 +28,37 @@ public class BaggageBusinessTest extends FixturesManager {
     }
 
     @Test
-    void deliver() {
-        String command = "deliver";
+    void closeShipment() {
+        String command = "closeShipment";
         Map<String, Object> params = new HashMap<>();
         params.put("id", "vol1");
-        params.put("num", 21);
 
         String result = (String) serveurImpl.processRequest(command, params);
         LOG.info(result);
-        assertEquals("{\"flightId\":\"vol1\",\"numero\":21,\"weight\":2.0,\"passenger\":\"Paul\"}", result);
+        assertEquals("true", result);
 
-        // todo: assert isDelivre true
+        // todo: assert isClosed true
     }
 
     @Test
-    void retrieval() {
-        String command = "retrieval";
+    void getLostBaggages() {
+        String command = "getLostBaggages";
         Map<String, Object> params = new HashMap<>();
-        params.put("id", "vol2");
-        params.put("num", 21);
+        params.put("id", "vol3");
 
         String result = (String) serveurImpl.processRequest(command, params);
         LOG.info(result);
-        assertEquals("{\"flightId\":\"vol2\",\"numero\":21,\"weight\":2.0,\"passenger\":\"Jack\"}", result);
+        assertEquals("[{\"flightId\":\"vol3\",\"numero\":23,\"weight\":2.0,\"passenger\":\"Lost\"}]", result);
+    }
 
-        // todo: assert isRetrieval true
+    @Test
+    void getUnclaimedBaggages() {
+        String command = "getUnclaimedBaggages";
+        Map<String, Object> params = new HashMap<>();
+        params.put("id", "vol3");
+
+        String result = (String) serveurImpl.processRequest(command, params);
+        LOG.info(result);
+        assertEquals("[{\"flightId\":\"vol3\",\"numero\":22,\"weight\":2.0,\"passenger\":\"Unclaimed\"}]", result);
     }
 }
