@@ -21,6 +21,14 @@ public class ComponentLoader {
 
     private ComponentLoader() {}
 
+    /**
+     * WOw ~
+     * Register components in container.
+     * Charge les composants déclarés dans le fichier de config en
+     * fonction de leur forme dans le container de l'app.
+     * @param component Un jsonObject issu d'un array de appConfiguration.json
+     * @param picoContainer gestionnaire.
+     */
     public static void load(JsonObject component, MutablePicoContainer picoContainer) {
         String className = component.getString("class-name");
 
@@ -99,7 +107,7 @@ public class ComponentLoader {
     }
 
     /**
-     * Récupère la Classe Command C associé au CommandHandler (ICommandHandler<R,C>).
+     * Récupère la classe Command C associé au CommandHandler (ICommandHandler<R,C>).
      * @param handlerClass Classe CommandHandler.
      * @return Class Command.
      * @throws ClassNotFoundException
@@ -110,7 +118,7 @@ public class ComponentLoader {
 
     /**
      * Récupère le type CommandHandler parsé en ParameterizedType afin
-     * de le manipuler via les méthodes qui nous intéressent, cf. getCommandFromHandler.
+     * de le manipuler et récupérer ses arguments. cf. getCommandFromHandler.
      * @param myClass CommandHandler class.
      * @return ParameterizedType of CommandHandler class.
      */
