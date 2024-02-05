@@ -20,15 +20,21 @@ import tiw.is.vols.livraison.infrastructure.command.service.flight.CloseShipment
 import tiw.is.vols.livraison.infrastructure.command.service.flight.GetLostBaggagesCommand;
 import tiw.is.vols.livraison.infrastructure.command.service.flight.GetUnclaimedBaggagesCommand;
 import tiw.is.vols.livraison.infrastructure.commandBus.CommandBus;
+import tiw.is.vols.livraison.infrastructure.commandBus.ICommand;
 
 import java.util.Map;
 
-public abstract class Dispatcher {
+public class Dispatcher {
     private static final JsonFormatter<Object> formatter = new JsonFormatter<>();
 
-    private Dispatcher() {}
+    private static CommandBus commandBus;
 
-    public static Object dispatch(String command, Map<String, Object> params, CommandBus commandBus) throws Exception {
+    // good first example of injection.
+    public Dispatcher(CommandBus<?, ? extends ICommand> commandBus) {
+        Dispatcher.commandBus = commandBus;
+    }
+
+    public Object dispatch(String command, Map<String, Object> params) throws Exception {
         return switch (command) {
             case "deliver" -> formatter.serializeObject(
                     commandBus.handle(new DeliverBaggageCommand(
@@ -61,7 +67,7 @@ public abstract class Dispatcher {
         };
     }
 
-    public static Object dispatchCompanyResource(String command, Map<String, Object> params, CommandBus commandBus) throws Exception {
+    public Object dispatchCompanyResource(String command, Map<String, Object> params) throws Exception {
         return switch (command) {
             case "create" -> formatter.serializeObject(
                     commandBus.handle(new CreateCompanyCommand((String) params.get("id")))
@@ -79,7 +85,7 @@ public abstract class Dispatcher {
         };
     }
 
-    public static Object dispatchFlightResource(String command, Map<String, Object> params, CommandBus commandBus) throws Exception {
+    public Object dispatchFlightResource(String command, Map<String, Object> params) throws Exception {
         return switch (command) {
             case "create", "update" -> formatter.serializeObject(
                     commandBus.handle(new CreateOrUpdateFlightCommand(
@@ -101,7 +107,7 @@ public abstract class Dispatcher {
         };
     }
 
-    public static Object dispatchBaggageResource(String command, Map<String, Object> params, CommandBus commandBus) throws Exception {
+    public Object dispatchBaggageResource(String command, Map<String, Object> params) throws Exception {
         return switch (command) {
             case "create" -> formatter.serializeObject(
                     commandBus.handle(new CreateBaggageCommand(

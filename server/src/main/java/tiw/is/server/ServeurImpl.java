@@ -15,7 +15,6 @@ import tiw.is.server.service.ComponentLoader;
 import tiw.is.server.service.Dispatcher;
 import tiw.is.server.utils.FixturesManager;
 import tiw.is.vols.livraison.exception.CommandNotFoundException;
-import tiw.is.vols.livraison.infrastructure.commandBus.CommandBus;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -51,8 +50,9 @@ public class ServeurImpl implements Serveur {
             loadComponents(configJson.getJsonObject(app).getJsonArray("handlers-components"));
             loadComponents(configJson.getJsonObject(app).getJsonArray("commandbus-components"));
 
-            // Client test fixture manager.
+            // Serveur's Services
             picoContainer.addComponent(FixturesManager.class);
+            picoContainer.addComponent(Dispatcher.class);
 
             LOG.info("---------------------------  [SERVER INFO: START]  ---------------------------");
             picoContainer.start();
@@ -78,11 +78,12 @@ public class ServeurImpl implements Serveur {
      */
     public Object processRequest(String resource, String command, Map<String, Object> params) {
         try {
+            Dispatcher dispatcher = picoContainer.getComponent(Dispatcher.class);
             return switch (resource) {
-                case "company" -> Dispatcher.dispatchCompanyResource(command, params, picoContainer.getComponent(CommandBus.class));
-                case "flight" -> Dispatcher.dispatchFlightResource(command, params, picoContainer.getComponent(CommandBus.class));
-                case "baggage" -> Dispatcher.dispatchBaggageResource(command, params, picoContainer.getComponent(CommandBus.class));
-                case "flightBusiness", "baggagesBusiness" -> Dispatcher.dispatch(command, params, picoContainer.getComponent(CommandBus.class));
+                case "company" -> dispatcher.dispatchCompanyResource(command, params);
+                case "flight" -> dispatcher.dispatchFlightResource(command, params);
+                case "baggage" -> dispatcher.dispatchBaggageResource(command, params);
+                case "flightBusiness", "baggagesBusiness" -> dispatcher.dispatch(command, params);
                 default -> throw new CommandNotFoundException(resource + " does not exist.");
             };
 
