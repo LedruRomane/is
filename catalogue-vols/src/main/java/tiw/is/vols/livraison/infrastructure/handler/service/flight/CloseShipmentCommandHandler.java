@@ -16,6 +16,13 @@ public class CloseShipmentCommandHandler implements ICommandHandler<Boolean, Clo
         this.dao = dao;
     }
 
+    /**
+     * Execution: close a flight baggage delivery.
+     *
+     * @param command Flight's ID.
+     * @return true if flight's closed.
+     * @throws ResourceNotFoundException
+     */
     public Boolean handle(CloseShipmentCommand command) throws ResourceNotFoundException {
         Flight flight = Optional.ofNullable(dao.getOneById(command.id())).orElseThrow(
                 () -> new ResourceNotFoundException("Le flight " + command.id() + " n'existe pas.")

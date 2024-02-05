@@ -20,6 +20,14 @@ public class RetrievalBaggageCommandHandler implements ICommandHandler<BaggageDT
         this.flightDao = flightDao;
     }
 
+    /**
+     * Execution: mark baggage as retrieval by his owner.
+     *
+     * @param command Flight's ID and baggage's num.
+     * @return BaggageDTO.
+     * @throws ResourceNotFoundException
+     * @throws IllegalStateException
+     */
     public BaggageDTO handle(RetrievalBaggageCommand command) throws ResourceNotFoundException, IllegalStateException {
         Flight flight = flightDao.getOneById(command.id());
         if(flight == null) {

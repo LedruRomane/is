@@ -11,8 +11,9 @@ public class TransactionMiddleware implements IMiddleware {
 
     /**
      * middleware that wrap the handler execution into a transaction.
+     *
      * @param command provide it directly to the handler.
-     * @param next middleware to execute (letsgo -> into :D)
+     * @param next    middleware to execute (letsgo -> into :D)
      * @return the return from the next.
      * @throws Exception
      */

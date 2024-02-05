@@ -17,10 +17,10 @@ public class GetFlightCommandHandler implements ICommandHandler<FlightDTO, GetFl
     }
 
     /**
-     * Renvoie un vol en fonction de son id.
+     * Execution: get one flight by ID.
      *
-     * @param command payload qui contient l'id du vol cherché.
-     * @return le vol trouvé ou null si aucun vol n'a été trouvé.
+     * @param command payload with flight ID.
+     * @return FlightDTO.
      */
     public FlightDTO handle(GetFlightCommand command) throws ResourceNotFoundException {
         Flight flight = Optional.ofNullable(dao.getOneById(command.id())).orElseThrow(

@@ -21,6 +21,14 @@ public class GetLostBaggagesCommandHandler implements ICommandHandler<Collection
         this.baggageDao = baggageDao;
     }
 
+    /**
+     * Execution: get Lost baggages by flight.
+     *
+     * @param command Flight's ID.
+     * @return Collection of BaggageDTO.
+     * @throws ResourceNotFoundException
+     * @throws IllegalStateException
+     */
     public Collection<BaggageDTO> handle(GetLostBaggagesCommand command) throws ResourceNotFoundException, IllegalStateException {
         Flight flight = Optional.ofNullable(dao.getOneById(command.id())).orElseThrow(
                 () -> new ResourceNotFoundException("Le flight " + command.id() + " n'existe pas.")

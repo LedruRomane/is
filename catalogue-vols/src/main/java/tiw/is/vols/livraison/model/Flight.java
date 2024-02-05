@@ -81,9 +81,9 @@ public class Flight implements Serializable {
     }
 
     /**
-     * Créée un nouveau bagage rattaché à ce vol
-     * @param poids le poids du bagage
-     * @param passenger la référence au passager du bagage
+     * Créée un nouveau bagage rattaché à ce vol.
+     * @param weight    le poids du bagage.
+     * @param passenger la référence au passager du bagage.
      * @return le bagage créé.
      */
     public Baggage createBagage(float weight, String passenger) {

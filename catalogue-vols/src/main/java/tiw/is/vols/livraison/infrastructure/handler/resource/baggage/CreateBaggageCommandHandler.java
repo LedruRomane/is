@@ -1,5 +1,7 @@
 package tiw.is.vols.livraison.infrastructure.handler.resource.baggage;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import tiw.is.vols.livraison.dao.BaggageDao;
 import tiw.is.vols.livraison.dao.FlightDao;
 import tiw.is.vols.livraison.dto.BaggageDTO;
@@ -10,26 +12,18 @@ import tiw.is.vols.livraison.infrastructure.commandBus.ICommandHandler;
 import tiw.is.vols.livraison.model.Baggage;
 import tiw.is.vols.livraison.model.Flight;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-/**
- * Handler that provide the Creation of a company.
- * We inject the controller that provide the operations for the creation.
- * Should implement the HandlerInterface to ensure a strong typing check.
- */
 public class CreateBaggageCommandHandler implements ICommandHandler<BaggageDTO, CreateBaggageCommand> {
-    static final Logger logger = LoggerFactory.getLogger(CreateBaggageCommandHandler.class);
-
     private final BaggageDao dao;
     private final FlightDao flightDao;
+
     public CreateBaggageCommandHandler(BaggageDao dao, FlightDao flightDao) {
         this.dao = dao;
         this.flightDao = flightDao;
     }
 
     /**
-     * Execution.
+     * Execution for baggage creation. Usually get command payload, calls DAO, and return DTO.
+     *
      * @param command Command injected, that provide the payload (body request).
      * @return company created.
      * @throws ResourceAlreadyExistsException
@@ -38,7 +32,7 @@ public class CreateBaggageCommandHandler implements ICommandHandler<BaggageDTO, 
      */
     public BaggageDTO handle(CreateBaggageCommand command) throws ResourceAlreadyExistsException, ResourceNotFoundException, ClassCastException {
         Flight flight = flightDao.getOneById(command.id());
-        if(flight == null) {
+        if (flight == null) {
             throw new ResourceNotFoundException("The flight doesn't exist: " + command.id());
         }
 

@@ -11,6 +11,7 @@ public interface IDataAccessObject<O> {
         throw new UnsupportedOperationException("Not implemented");
     }
 
+    // For composed identifiers.
     default O getOneById(String id, int num) {
         throw new UnsupportedOperationException("Not implemented");
     }
@@ -21,6 +22,7 @@ public interface IDataAccessObject<O> {
         throw new UnsupportedOperationException("Not implemented");
     }
 
+    // For composed identifiers.
     default boolean deleteOneById(String id, int num) {
         throw new UnsupportedOperationException("Not implemented");
     }

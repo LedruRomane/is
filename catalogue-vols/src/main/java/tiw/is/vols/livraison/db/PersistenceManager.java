@@ -5,7 +5,6 @@ import jakarta.persistence.Persistence;
 import org.picocontainer.Startable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import tiw.is.vols.livraison.infrastructure.commandBus.ICommandHandler;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,8 +16,9 @@ public class PersistenceManager implements Startable {
     private String dbPassword;
     Logger logger = LoggerFactory.getLogger(PersistenceManager.class);
 
+    public PersistenceManager() {
+    }
 
-    public PersistenceManager() {}
     public PersistenceManager(String dbHost, String dbName, String dbUser, String dbPassword) {
         this.dbHost = dbHost;
         this.dbName = dbName;
@@ -32,7 +32,8 @@ public class PersistenceManager implements Startable {
     }
 
     @Override
-    public void stop() {}
+    public void stop() {
+    }
 
     public EntityManagerFactory createEntityManagerFactory() {
         String dbHost = System.getenv().getOrDefault("DB_HOST", this.dbHost);

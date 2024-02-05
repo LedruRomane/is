@@ -17,10 +17,10 @@ public class GetBaggageCommandHandler implements ICommandHandler<BaggageDTO, Get
     }
 
     /**
-     * Renvoie un bagage en fonction de l'id du vol et de son numéro.
+     * Execution found one baggage. Usually get command payload, calls DAO, and return DTO.
      *
-     * @param command payload qui contient l'id du vol et numéro du bagage.
-     * @return le bagage trouvé ou null si aucun bagage n'a été trouvé.
+     * @param command payload with Flight's ID and Baggage's num.
+     * @return BaggageDTO.
      */
     public BaggageDTO handle(GetBaggageCommand command) throws ResourceNotFoundException {
         Baggage baggage = Optional.ofNullable(dao.getOneById(command.id(), command.num())).orElseThrow(

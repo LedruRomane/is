@@ -15,6 +15,13 @@ public class GetFlightsCommandHandler implements ICommandHandler<Collection<Flig
         this.dao = dao;
     }
 
+    /**
+     * Execution: Get All flights.
+     *
+     * @param command
+     * @return Collection of FlightDTO.
+     * @throws ResourceNotFoundException
+     */
     public Collection<FlightDTO> handle(GetFlightsCommand command) throws ResourceNotFoundException {
         return dao.getAll().stream().map(FlightDTO::fromFlight).toList();
     }

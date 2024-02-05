@@ -15,6 +15,13 @@ public class GetBaggagesCommandHandler implements ICommandHandler<Collection<Bag
         this.dao = dao;
     }
 
+    /**
+     * Execution findAll Baggages. Usually get command payload, calls DAO, and return DTO.
+     *
+     * @param command
+     * @return Collection of BaggageDTO.
+     * @throws ResourceNotFoundException
+     */
     public Collection<BaggageDTO> handle(GetBaggagesCommand command) throws ResourceNotFoundException {
         return dao.getAll().stream().map(BaggageDTO::fromBaggage).toList();
     }

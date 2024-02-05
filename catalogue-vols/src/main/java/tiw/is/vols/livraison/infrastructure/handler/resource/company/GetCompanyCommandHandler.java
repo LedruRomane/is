@@ -9,17 +9,17 @@ import tiw.is.vols.livraison.model.Company;
 import java.util.Optional;
 
 public class GetCompanyCommandHandler implements ICommandHandler<Company, GetCompanyCommand> {
-
     private final CompanyDao dao;
+
     public GetCompanyCommandHandler(CompanyDao dao) {
         this.dao = dao;
     }
 
     /**
-     * Renvoie une compagnie en fonction de son id.
+     * Execution : get One company from his ID.
      *
-     * @param command payload qui contient l'id de la compagnie cherchée
-     * @return la compagnie trouvée ou null si aucune compagnie n'a été trouvée
+     * @param command payload that contain Company's ID.
+     * @return Company.
      */
     public Company handle(GetCompanyCommand command) throws ResourceNotFoundException {
         return Optional.ofNullable(dao.getOneById(command.id())).orElseThrow(

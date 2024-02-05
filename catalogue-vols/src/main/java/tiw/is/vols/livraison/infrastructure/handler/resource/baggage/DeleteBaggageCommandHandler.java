@@ -12,8 +12,15 @@ public class DeleteBaggageCommandHandler implements ICommandHandler<Boolean, Del
         this.dao = dao;
     }
 
+    /**
+     * Execution for baggage deletion. Usually get command payload, calls DAO, and return DTO.
+     *
+     * @param command payload.
+     * @return  boolean true if deleted.
+     * @throws ResourceNotFoundException
+     */
     public Boolean handle(DeleteBaggageCommand command) throws ResourceNotFoundException {
-        if(!dao.deleteOneById(command.id(), command.num()))
+        if (!dao.deleteOneById(command.id(), command.num()))
             throw new ResourceNotFoundException("Le vol " + command.id() + " n'existe pas, ou le num " + command.num() + " bagage n'existe pas.");
         return true;
     }

@@ -7,6 +7,9 @@ import tiw.is.vols.livraison.model.Flight;
 
 import java.util.Collection;
 
+/**
+ * Data Access Object for Baggage Model.
+ */
 public class BaggageDao implements IDataAccessObject<Baggage> {
     private final EntityManager em;
     private final FlightDao flightDao;
@@ -17,9 +20,9 @@ public class BaggageDao implements IDataAccessObject<Baggage> {
     }
 
     /**
-     * Renvoie l'ensemble des bagages
+     * Renvoie l'ensemble des bagages.
      *
-     * @return une collection de Bagages
+     * @return une collection de Bagages.
      */
     public Collection<Baggage> getAll() {
         return em.createQuery("SELECT b FROM Baggage b", Baggage.class)
@@ -27,10 +30,10 @@ public class BaggageDao implements IDataAccessObject<Baggage> {
     }
 
     /**
-     * Créée un bagage pour le vol indiqué
+     * Créé un bagage pour le vol indiqué
      *
-     * @param baggage  Bagage à sauvegarder.
-     * @return le bagage créé et persisté
+     * @param baggage Bagage à sauvegarder.
+     * @return le bagage créé et persisté.
      */
     public Baggage save(Baggage baggage) {
         em.persist(baggage);
@@ -38,11 +41,11 @@ public class BaggageDao implements IDataAccessObject<Baggage> {
     }
 
     /**
-     * Renvoie un bagage cherché par identifiant de vol et numéro
+     * Renvoie un bagage cherché par identifiant de vol et numéro.
      *
-     * @param flightId  l'identifiant du vol auquel le bagage est rattaché
-     * @param numero le numero du bagage
-     * @return le bagage cherché ou null si aucun bagage n'a été trouvé
+     * @param flightId l'identifiant du vol auquel le bagage est rattaché.
+     * @param numero   le numero du bagage.
+     * @return le bagage cherché ou null si aucun bagage n'a été trouvé.
      */
     public Baggage getOneById(String flightId, int numero) {
         Flight flight = flightDao.getOneById(flightId);
@@ -53,17 +56,17 @@ public class BaggageDao implements IDataAccessObject<Baggage> {
     }
 
     /**
-     * Met à jour un bagage existant (à utiliser à partir d'un BaggageDTO)
+     * Met à jour un bagage existant (à utiliser à partir d'un BaggageDTO).
      *
-     * @param flightId    l'ID du vol concerné par le bagage
-     * @param weight    le poids du bagage
-     * @param passenger la référence du passager ayant déposé le bagage
+     * @param flightId  l'ID du vol concerné par le bagage.
+     * @param weight    le poids du bagage.
+     * @param passenger la référence du passager ayant déposé le bagage.
      * @return le bagage mis à jour et persisté ou null si le bagage n'existe
-     * pas
+     * pas.
      */
     public Baggage update(String flightId, int numero, float weight,
-                                String passenger, boolean delivre,
-                                boolean recupere) {
+                          String passenger, boolean delivre,
+                          boolean recupere) {
         Baggage b = getOneById(flightId, numero);
         if (b != null) {
             b.setWeight(weight);
@@ -78,11 +81,11 @@ public class BaggageDao implements IDataAccessObject<Baggage> {
     }
 
     /**
-     * Met à jour un baggage existant (à utiliser à partir d'un Baggage)
+     * Met à jour un baggage existant (à utiliser à partir d'un Baggage).
      *
-     * @param baggage Le baggage à mettre à jour
+     * @param baggage Le baggage à mettre à jour.
      * @return le baggage mis à jour et persisté ou null si le baggage n'existe
-     * pas
+     * pas.
      */
     public Baggage update(Baggage baggage) {
         return update(baggage.getFlight().getId(), baggage.getNumero(),
@@ -91,11 +94,11 @@ public class BaggageDao implements IDataAccessObject<Baggage> {
     }
 
     /**
-     * Renvoie l'ensemble des bagages non délivrés pour un vol
+     * Renvoie l'ensemble des bagages non délivrés pour un vol.
      *
-     * @param flightId l'ID du vol concerné
+     * @param flightId l'ID du vol concerné.
      * @return une collection de Baggage sur ce vol dont l'attribut delivre
-     * est false
+     * est false.
      */
     public Collection<Baggage> getBagagesPerdusByFlightId(String flightId) {
         var dq = em.createQuery(
@@ -107,11 +110,11 @@ public class BaggageDao implements IDataAccessObject<Baggage> {
     }
 
     /**
-     * Renvoie l'ensemble des bagages non récupérés pour un vol
+     * Renvoie l'ensemble des bagages non récupérés pour un vol.
      *
-     * @param flightId l'ID du vol concerné
+     * @param flightId l'ID du vol concerné.
      * @return une collection de Baggage sur ce vol dont l'attribut recupere
-     * est false
+     * est false.
      */
     public Collection<Baggage> getBagagesNonRecuperesByFlightId(String flightId) {
         var dq = em.createQuery(
@@ -124,11 +127,11 @@ public class BaggageDao implements IDataAccessObject<Baggage> {
     }
 
     /**
-     * Supprime un bagage
+     * Supprime un bagage.
      *
-     * @param flightId  l'identifiant du vol auquel ce bagage est rattaché
-     * @param numero le numéro du bagage
-     * @return true si le bagage a été supprimé, false s'il n'a pas été trouvé
+     * @param flightId l'identifiant du vol auquel ce bagage est rattaché.
+     * @param numero   le numéro du bagage.
+     * @return true si le bagage a été supprimé, false s'il n'a pas été trouvé.
      */
     public boolean deleteOneById(String flightId, int numero) {
         Baggage b = getOneById(flightId, numero);

@@ -2,6 +2,9 @@ package tiw.is.vols.livraison.infrastructure.commandBus;
 
 import java.util.Map;
 
+/**
+ * Middleware that provide the command handler execution.
+ */
 public class HandlerMiddleware implements IMiddleware {
     protected static Map<Class, ICommandHandler<Object, ICommand>> handlerLocator;
 

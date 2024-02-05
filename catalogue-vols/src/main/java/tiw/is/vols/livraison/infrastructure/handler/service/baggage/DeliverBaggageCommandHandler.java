@@ -20,9 +20,16 @@ public class DeliverBaggageCommandHandler implements ICommandHandler<BaggageDTO,
         this.flightDao = flightDao;
     }
 
+    /**
+     * Execution: mark a baggage as deliver.
+     *
+     * @param command Flight's ID and baggage's num.
+     * @return BaggageDTO
+     * @throws ResourceNotFoundException
+     */
     public BaggageDTO handle(DeliverBaggageCommand command) throws ResourceNotFoundException {
         Flight flight = flightDao.getOneById(command.id());
-        if(flight == null) {
+        if (flight == null) {
             throw new ResourceNotFoundException("The flight doesn't exist: " + command.id());
         }
 

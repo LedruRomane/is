@@ -24,6 +24,13 @@ public class CreateOrUpdateFlightCommandHandler implements ICommandHandler<Fligh
         this.companyDao = companyDao;
     }
 
+    /**
+     * Execution: Create or Update a flight.
+     *
+     * @param command payload that contain flight's ID.
+     * @return FlightDTO.
+     * @throws ResourceNotFoundException
+     */
     public FlightDTO handle(CreateOrUpdateFlightCommand command) throws ResourceNotFoundException {
         FlightDTO dto = new FlightDTO(command.id(), command.companyID(), command.pointLivraisonBagages());
 

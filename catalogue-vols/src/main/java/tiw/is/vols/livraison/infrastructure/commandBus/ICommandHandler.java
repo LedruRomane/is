@@ -5,6 +5,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * Command Handler interface.
+ * ndlr : les controlleurs qui devaient extends Startable sont les command Handler.
+ *
  * @param <R> type of return value (Company, Baggage, or Collections, boolean, etc.)
  * @param <C> type of command
  *

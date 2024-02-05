@@ -18,7 +18,8 @@ public class Baggage {
     private int numero;
     private float weight;
     private String passenger;
-    private boolean delivre, recupere;
+    private boolean delivre;
+    private boolean recupere;
 
     public Baggage() {
     }

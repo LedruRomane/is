@@ -4,21 +4,23 @@ import java.util.Collection;
 import java.util.Iterator;
 
 /**
- *
  * @param <R> return value.
  * @param <C> Command provided.
  */
 public class CommandBus<R, C extends ICommand> {
     private final Collection<IMiddleware> middleware;
 
-    public CommandBus(
-            Collection<IMiddleware> middleware
-    ) {
+    /**
+     * Wrapp commandbus execution with middleware.
+     * @param middleware    Collection of middleware.
+     */
+    public CommandBus(Collection<IMiddleware> middleware) {
         this.middleware = middleware;
     }
 
     /**
      * Find and execute the handler which corresponds to command C.
+     *
      * @param command command C.
      * @return the object R the handler return.
      * @throws Exception

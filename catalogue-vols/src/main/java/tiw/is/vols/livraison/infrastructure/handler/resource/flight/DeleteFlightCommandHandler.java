@@ -12,6 +12,13 @@ public class DeleteFlightCommandHandler implements ICommandHandler<Boolean, Dele
         this.dao = dao;
     }
 
+    /**
+     * Execution: delete a Flight.
+     *
+     * @param command Flight's ID.
+     * @return true if deleted.
+     * @throws ResourceNotFoundException
+     */
     public Boolean handle(DeleteFlightCommand command) throws ResourceNotFoundException {
         if(!dao.deleteOneById(command.id()))
             throw new ResourceNotFoundException("Le vol " + command.id() + " n'existe pas.");

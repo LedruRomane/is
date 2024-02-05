@@ -6,16 +6,13 @@ import tiw.is.vols.livraison.model.Flight;
 
 import java.util.Collection;
 
+/**
+ * Data Access Object for Flight Model.
+ */
 public class FlightDao implements IDataAccessObject<Flight> {
 
     private final EntityManager em;
 
-    /**
-     * Créée une instance de Catalogue qui utilisera l'EntityManager passé
-     * en argument pour gérer la persistence des objets.
-     *
-     * @param em l'entity manager en charge de la gestion des objets
-     */
     public FlightDao(EntityManager em) {
         this.em = em;
     }
@@ -23,17 +20,17 @@ public class FlightDao implements IDataAccessObject<Flight> {
     /**
      * L'ensemble des vols présents en base.
      *
-     * @return la liste contenant les vols
+     * @return la liste contenant les vols.
      */
     public Collection<Flight> getAll() {
         return em.createQuery("SELECT v FROM Flight v", Flight.class).getResultList();
     }
 
     /**
-     * Renvoie un vol en fonction de son id
+     * Renvoie un vol en fonction de son id.
      *
-     * @param id l'id du vol recherché
-     * @return le vol ou null s'il n'a pas été trouvé
+     * @param id l'id du vol recherché.
+     * @return le vol ou null s'il n'a pas été trouvé.
      */
     public Flight getOneById(String id) {
         return em.find(Flight.class, id);
@@ -42,14 +39,14 @@ public class FlightDao implements IDataAccessObject<Flight> {
     /**
      * Sauvegarde au besoin un vol.
      *
-     * @param v le vol à sauvegarder
-     * @return l'objet représentant v géré par l'entitymanager, qui peut être v lui-même
+     * @param v le vol à sauvegarder.
+     * @return l'objet représentant v géré par l'entitymanager, qui peut être v lui-même.
      */
     public Flight save(Flight v) {
         if (em.contains(v)) {
             return v;
         } else {
-            Flight v2 =  em.find(Flight.class, v.getId());
+            Flight v2 = em.find(Flight.class, v.getId());
             if (v2 == null) {
                 em.persist(v);
                 return v;
@@ -60,10 +57,10 @@ public class FlightDao implements IDataAccessObject<Flight> {
     }
 
     /**
-     * Supprime un vol spécifié par son id
+     * Supprime un vol spécifié par son id.
      *
-     * @param id l'id du vol à supprimer
-     * @return true si le vol a été supprimé, false s'il n'existe pas
+     * @param id l'id du vol à supprimer.
+     * @return true si le vol a été supprimé, false s'il n'existe pas.
      */
     public boolean deleteOneById(String id) {
         Flight flight = em.find(Flight.class, id);
@@ -76,14 +73,14 @@ public class FlightDao implements IDataAccessObject<Flight> {
     }
 
     /**
-     * Supprime tous les bagages rattachés à un vol
+     * Supprime tous les bagages rattachés à un vol.
      *
-     * @param flightId l'id du vol ciblé
+     * @param flightId l'id du vol ciblé.
      */
     private void deleteBaggageByFlightId(String flightId) {
         var dq = em.createQuery("SELECT b FROM Baggage b WHERE b.flight.id = :vId", Baggage.class);
         dq.setParameter("vId", flightId);
-        for(Baggage b: dq.getResultList()) {
+        for (Baggage b : dq.getResultList()) {
             em.remove(b);
         }
     }

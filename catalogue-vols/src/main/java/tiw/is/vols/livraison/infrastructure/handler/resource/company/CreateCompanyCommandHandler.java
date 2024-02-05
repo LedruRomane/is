@@ -1,9 +1,9 @@
 package tiw.is.vols.livraison.infrastructure.handler.resource.company;
 
 import tiw.is.vols.livraison.dao.CompanyDao;
+import tiw.is.vols.livraison.exception.ResourceAlreadyExistsException;
 import tiw.is.vols.livraison.infrastructure.command.resource.company.CreateCompanyCommand;
 import tiw.is.vols.livraison.infrastructure.commandBus.ICommandHandler;
-import tiw.is.vols.livraison.exception.ResourceAlreadyExistsException;
 import tiw.is.vols.livraison.model.Company;
 
 /**
@@ -14,12 +14,14 @@ import tiw.is.vols.livraison.model.Company;
 public class CreateCompanyCommandHandler implements ICommandHandler<Company, CreateCompanyCommand> {
 
     private final CompanyDao dao;
+
     public CreateCompanyCommandHandler(CompanyDao dao) {
         this.dao = dao;
     }
 
     /**
-     * Execution.
+     * Execution create a company.
+     *
      * @param command Command injected, that provide the payload (body request).
      * @return company created.
      * @throws ResourceAlreadyExistsException

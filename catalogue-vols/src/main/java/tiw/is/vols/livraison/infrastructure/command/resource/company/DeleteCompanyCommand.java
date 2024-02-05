@@ -3,7 +3,9 @@ package tiw.is.vols.livraison.infrastructure.command.resource.company;
 import tiw.is.vols.livraison.infrastructure.commandBus.ICommand;
 
 /**
- * Record that provide getter or setter implicitly.
- * @param id String id of the company that we want to delete (payload).
+ * Command record for company deletion.
+ *
+ * @param id ID of the company that we want to delete.
  */
-public record DeleteCompanyCommand(String id) implements ICommand {}
+public record DeleteCompanyCommand(String id) implements ICommand {
+}
