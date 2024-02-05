@@ -52,6 +52,8 @@ public class ServeurImpl implements Serveur {
             loadComponents(configJson.getJsonObject(app).getJsonArray("handlers-components"));
             loadComponents(configJson.getJsonObject(app).getJsonArray("commandbus-components"));
 
+            picoContainer.addComponent(new FixturesManager(picoContainer.getComponent(EntityManager.class)));
+
             LOG.info("---------------------------  [SERVER INFO: START]  ---------------------------");
             picoContainer.start();
         }
@@ -89,13 +91,7 @@ public class ServeurImpl implements Serveur {
             return "KO"; // Simulate an http error return.
         }
     }
-
-    /**
-     * Test purpose.
-     *
-     * @throws Exception
-     */
-    public void resetDatabase() throws Exception {
-        FixturesManager.resetDatabase(picoContainer.getComponent(EntityManager.class));
+    public MutablePicoContainer getContainer() {
+        return picoContainer;
     }
 }

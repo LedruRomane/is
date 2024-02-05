@@ -1,4 +1,3 @@
-/*
 package tiw.is.vols.livraison.db;
 
 import jakarta.persistence.EntityManager;
@@ -6,6 +5,7 @@ import jakarta.persistence.EntityManagerFactory;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import tiw.is.vols.livraison.dao.FlightDao;
 import tiw.is.vols.livraison.model.Company;
 import tiw.is.vols.livraison.model.Flight;
 
@@ -20,16 +20,19 @@ public class PersistenceManagerTest {
 
     @BeforeAll
     public static void setupClass() {
-        emf = PersistenceManager.createEntityManagerFactory();
+        PersistenceManager pm = new PersistenceManager(
+                "localhost",
+                "catalogue-db",
+                "catalogue",
+                "catalogue-mdp"
+        );
+        emf = pm.createEntityManagerFactory();
     }
 
     @AfterAll
     public static void tearDownClass() {
         emf.close();
     }
-
-*
-     * Testing EntityManager setup
 
 
     @Test
@@ -49,9 +52,6 @@ public class PersistenceManagerTest {
         em.getTransaction().commit();
     }
 
-*
-     * Testing listing of flights
-
 
     @Test
     public void testListVols() {
@@ -66,8 +66,8 @@ public class PersistenceManagerTest {
         em.persist(v2);
         em.persist(v3);
         em.getTransaction().commit();
-        CatalogueVol cat = new CatalogueVol(em);
-        Collection<Flight> cv = cat.getVols();
+        FlightDao cat = new FlightDao(em);
+        Collection<Flight> cv = cat.getAll();
         for (Flight v : Arrays.asList(v1, v2, v3)) {
             assertTrue(cv.contains(v), () -> (v + " not in " + cv));
         }
@@ -79,10 +79,6 @@ public class PersistenceManagerTest {
         em.getTransaction().commit();
     }
 
-*
-     * Test de sauvegarde d'un vol en base
-
-
     @Test
     public void testSaveVol() {
         EntityManager em = emf.createEntityManager();
@@ -90,10 +86,10 @@ public class PersistenceManagerTest {
         em.getTransaction().begin();
         em.persist(c);
         em.getTransaction().commit();
-        CatalogueVol cat = new CatalogueVol(em);
+        FlightDao cat = new FlightDao(em);
         Flight v = new Flight("vol-in-testSaveVol", c, "e");
         em.getTransaction().begin();
-        cat.saveVol(v);
+        cat.save(v);
         em.getTransaction().commit();
         em.getTransaction().begin();
         Flight v2 = em.find(Flight.class,v.getId());
@@ -103,4 +99,3 @@ public class PersistenceManagerTest {
         em.getTransaction().commit();
     }
 }
-*/

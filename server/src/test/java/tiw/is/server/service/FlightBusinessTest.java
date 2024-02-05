@@ -1,33 +1,18 @@
 package tiw.is.server.service;
 
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import tiw.is.server.Serveur;
-import tiw.is.server.ServeurImpl;
+import tiw.is.server.db.ServeurManager;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class FlightBusinessTest {
-    private static Serveur serveur;
+public class FlightBusinessTest extends ServeurManager {
     private final static Logger LOG = LoggerFactory.getLogger(FlightBusinessTest.class);
     private final String resource = "flightBusiness";
-
-    @BeforeAll
-    public static void setupClass() throws IOException {
-        serveur = new ServeurImpl();
-    }
-
-    @BeforeEach
-    public void setupDatabase() throws Exception {
-        serveur.resetDatabase();
-    }
 
     @Test
     void closeShipment() {
@@ -38,8 +23,6 @@ public class FlightBusinessTest {
         String result = (String) serveur.processRequest(resource, command, params);
         LOG.info(result);
         assertEquals("true", result);
-
-        // todo: assert isClosed true
     }
 
     @Test

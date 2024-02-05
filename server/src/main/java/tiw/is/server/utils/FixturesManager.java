@@ -8,11 +8,14 @@ import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public abstract class FixturesManager {
+public class FixturesManager {
 
-    private FixturesManager() {}
+    private static EntityManager em;
+    public FixturesManager(EntityManager em) {
+        this.em = em;
+    }
 
-    public static void resetDatabase(EntityManager em) throws Exception {
+    public static void resetDatabase() throws Exception {
         Session session = em.unwrap(Session.class);
 
         try {String sql = new String(Files.readAllBytes(Paths.get("./init.sql")));
@@ -30,5 +33,4 @@ public abstract class FixturesManager {
             em.clear();
         }
     }
-
 }

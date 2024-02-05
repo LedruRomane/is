@@ -7,4 +7,4 @@ import tiw.is.vols.livraison.infrastructure.commandBus.ICommand;
  *
  * @param id String id of the new flight that we want to create or update.
  */
-public record CreateOrUpdateFlightCommand(String id, String companyID, String pointLivraisonBagages  ) implements ICommand {}
+public record CreateOrUpdateFlightCommand(String id, String companyID, String pointLivraisonBagages) implements ICommand {}

@@ -1,33 +1,19 @@
 package tiw.is.server.service;
 
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import tiw.is.server.Serveur;
-import tiw.is.server.ServeurImpl;
+import tiw.is.server.db.ServeurManager;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class BaggageBusinessTest {
-    private static Serveur serveur;
+public class BaggageBusinessTest extends ServeurManager {
+
     private final static Logger LOG = LoggerFactory.getLogger(BaggageBusinessTest.class);
     private final String resource = "baggagesBusiness";
-
-    @BeforeAll
-    public static void setupClass() throws IOException {
-        serveur = new ServeurImpl();
-    }
-
-    @BeforeEach
-    public void setupDatabase() throws Exception {
-        serveur.resetDatabase();
-    }
 
     @Test
     void deliver() {
@@ -39,8 +25,6 @@ public class BaggageBusinessTest {
         String result = (String) serveur.processRequest(resource, command, params);
         LOG.info(result);
         assertEquals("{\"flightId\":\"vol1\",\"numero\":21,\"weight\":2.0,\"passenger\":\"Paul\"}", result);
-
-        // todo: assert isDelivre true
     }
 
     @Test
@@ -53,7 +37,5 @@ public class BaggageBusinessTest {
         String result = (String) serveur.processRequest(resource, command, params);
         LOG.info(result);
         assertEquals("{\"flightId\":\"vol2\",\"numero\":21,\"weight\":2.0,\"passenger\":\"Jack\"}", result);
-
-        // todo: assert isRetrieval true
     }
 }

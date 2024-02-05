@@ -1,35 +1,22 @@
 package tiw.is.server.resource;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import tiw.is.server.Serveur;
-import tiw.is.server.ServeurImpl;
+import tiw.is.server.db.ServeurManager;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
-public class CompanyTest {
-    private static Serveur serveur;
+public class CompanyTest extends ServeurManager {
     private final static Logger LOG = LoggerFactory.getLogger(CompanyTest.class);
     private final Map<String, Object> voidParams = new HashMap<>();
     private final String resource = "company";
 
     private final String companyID = "company1";
-
-    @BeforeAll
-    public static void setupClass() throws IOException {
-        serveur = new ServeurImpl();
-    }
-
-    @BeforeEach
-    public void setupDatabase() throws Exception {
-        serveur.resetDatabase();
-    }
 
     @Test
     void createCompany() {
@@ -40,7 +27,7 @@ public class CompanyTest {
 
         String result = (String) serveur.processRequest(resource, command, params);
         LOG.info(result);
-        assertEquals("{\"id\":\""+ newID +"\"}", result);
+        assertEquals("{\"id\":\"" + newID + "\"}", result);
     }
 
     @Test
@@ -51,7 +38,7 @@ public class CompanyTest {
 
         String result = (String) serveur.processRequest(resource, command, params);
         LOG.info(result);
-        assertEquals("{\"id\":\""+ this.companyID +"\"}", result);
+        assertEquals("{\"id\":\"" + this.companyID + "\"}", result);
     }
 
     @Test
@@ -73,8 +60,5 @@ public class CompanyTest {
 
         LOG.info(result);
         assertEquals("true", result);
-        //todo: assert the flight isn't in database anymore ?
     }
-
-    // todo: test exceptions ?
 }

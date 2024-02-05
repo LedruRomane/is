@@ -1,45 +1,43 @@
-/*
-package tiw.is.flights.livraison.dao;
+package tiw.is.vols.livraison.dao;
 
 import org.junit.jupiter.api.Test;
-import tiw.is.flights.livraison.model.Baggage;
-import tiw.is.flights.livraison.model.Flight;
+import tiw.is.vols.livraison.model.Baggage;
+import tiw.is.vols.livraison.model.Flight;
 
 import java.util.Collection;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class CatalogueBagageTest extends CatalogueTest {
+class BaggageDaoTest extends DataAccessObjectTest {
 
     private Collection<Baggage> getBagageByVolId(String volId) {
         var dq = em.createQuery(
-                "SELECT b FROM Baggage b WHERE b.vol.id = :vId",
+                "SELECT b FROM Baggage b WHERE b.flight.id = :vId",
                 Baggage.class);
         dq.setParameter("vId", volId);
         return dq.getResultList();
     }
 
-@Test
+    @Test
     void getBagages() {
-        var bags = catalogueBagage.getBagages();
+        var bags = baggageDao.getAll();
         for (Baggage b : baggages) {
             assertTrue(bags.contains(b));
         }
     }
-
 
     @Test
     void createBagage() {
         Flight v = flights[0];
         em.getTransaction().begin();
         String passenger = "p-" + testName + "nouveau";
-        Baggage b = catalogueBagage.createBagage(v, 1, passenger);
+        Baggage b = baggageDao.save(v.createBagage(2, passenger));
         em.getTransaction().commit();
         assertNotNull(b);
-        assertEquals(1, b.getWeight());
+        assertEquals(2, b.getWeight());
         assertEquals(passenger, b.getPassenger());
         em.getTransaction().begin();
-        Baggage b2 = catalogueBagage.createBagage(v, 1, passenger);
+        Baggage b2 = baggageDao.save(v.createBagage(2, passenger));
         em.getTransaction().commit();
         assertNotEquals(b, b2);
         assertNotEquals(b.getNumero(),b2.getNumero());
@@ -52,22 +50,21 @@ class CatalogueBagageTest extends CatalogueTest {
     @Test
     void getBagageById() {
         Baggage b = baggages[0];
-        assertNotNull(catalogueBagage.getBagageById(b.getVol().getId(), b.getNumero()));
-        assertNull(catalogueBagage.getBagageById("vol inexistant", 1));
-        assertNull(catalogueBagage.getBagageById(b.getVol().getId(), -1));
+        assertNotNull(baggageDao.getOneById(b.getFlight().getId(), b.getNumero()));
+        assertNull(baggageDao.getOneById("vol inexistant", 1));
+        assertNull(baggageDao.getOneById(b.getFlight().getId(), -1));
     }
 
-@Test
+    @Test
     void deleteBagageById() {
         Baggage b = baggages[2];
         em.getTransaction().begin();
-        assertTrue(catalogueBagage.deleteBagageById(b.getVol().getId(), b.getNumero()));
+        assertTrue(baggageDao.deleteOneById(b.getFlight().getId(), b.getNumero()));
         em.getTransaction().commit();
         em.getTransaction().begin();
-        assertFalse(catalogueBagage.deleteBagageById(b.getVol().getId(), b.getNumero()));
+        assertFalse(baggageDao.deleteOneById(b.getFlight().getId(), b.getNumero()));
         em.getTransaction().commit();
     }
-
 
     @Test
     void getBagagesPerdusByVolId() {
@@ -76,11 +73,11 @@ class CatalogueBagageTest extends CatalogueTest {
         assertTrue(bagageByVolId.stream().anyMatch(Baggage::isDelivre), "Il n'y a pas de bagage délivré");
         assertTrue(bagageByVolId.stream().anyMatch(b -> !b.isDelivre()),
                 "Il n'y a pas de bagage non délivré");
-        var bgg = catalogueBagage.getBagagesPerdusByVolId(lastVolId);
+        var bgg = baggageDao.getBagagesPerdusByFlightId(lastVolId);
         assertTrue(bgg.size() > 0);
         for(Baggage b:bgg) {
             assertFalse(b.isDelivre(),
-                    "Le bagage "+b.getVol()+"-"+b.getNumero()+" ne devrait " +
+                    "Le bagage "+b.getFlight()+"-"+b.getNumero()+" ne devrait " +
                             "pas figurer dans les baggages perdus");
         }
     }
@@ -93,13 +90,12 @@ class CatalogueBagageTest extends CatalogueTest {
                 "n'y a pas de bagage récupéré");
         assertTrue(bagageByVolId.stream().anyMatch(b -> !b.isRecupere()),
                 "Il n'y a pas de bagage non récupéré");
-        var bgg = catalogueBagage.getBagagesNonRecuperesByVolId(lastVolId);
+        var bgg = baggageDao.getBagagesNonRecuperesByFlightId(lastVolId);
         assertTrue(bgg.size() > 0);
         for(Baggage b:bgg) {
             assertFalse(b.isRecupere(),
-                    "Le bagage "+b.getVol()+"-"+b.getNumero()+" ne devrait " +
+                    "Le bagage "+b.getFlight()+"-"+b.getNumero()+" ne devrait " +
                             "pas figurer dans les baggages non recuperes");
         }
     }
 }
-*/

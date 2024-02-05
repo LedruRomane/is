@@ -1,4 +1,3 @@
-/*
 package tiw.is.vols.livraison.dao;
 
 import jakarta.persistence.EntityManager;
@@ -11,12 +10,13 @@ import tiw.is.vols.livraison.model.Flight;
 
 import java.util.stream.IntStream;
 
-public abstract class CatalogueTest {
+public abstract class DataAccessObjectTest {
+
     private static EntityManagerFactory emf;
     protected EntityManager em;
-    protected CatalogCompany catalogCompany;//todo: change
-    protected CatalogueVol catalogueVol;
-    protected CatalogueBagage catalogueBagage;
+    protected  BaggageDao baggageDao;
+    protected CompanyDao companyDao;
+    protected FlightDao flightDao;
     protected String testName;
     protected Company[] companies;
     protected Flight[] flights;
@@ -24,11 +24,27 @@ public abstract class CatalogueTest {
 
     @BeforeAll
     public static void setupClass() {
-        emf = PersistenceManager.createEntityManagerFactory();
+        PersistenceManager persistenceManager = new PersistenceManager(
+                "localhost",
+                "catalogue-db",
+                "catalogue",
+                "catalogue-mdp"
+        );
+        emf = persistenceManager.createEntityManagerFactory();
     }
 
     @AfterAll
     public static void tearDownClass() {
+        EntityManager em = emf.createEntityManager();
+        em.getTransaction().begin();
+
+        em.createQuery("DELETE FROM Baggage").executeUpdate();
+        em.createQuery("DELETE FROM Flight").executeUpdate();
+        em.createQuery("DELETE FROM Company").executeUpdate();
+
+        em.getTransaction().commit();
+        em.close();
+
         emf.close();
     }
 
@@ -36,9 +52,9 @@ public abstract class CatalogueTest {
     public void setup(TestInfo testInfo) {
         testName = testInfo.getDisplayName();
         em = emf.createEntityManager();
-        catalogCompany = new CatalogCompany(em);
-        catalogueVol =  new CatalogueVol(em);
-        catalogueBagage = new CatalogueBagage(em,catalogueVol);
+        companyDao = new CompanyDao(em);
+        flightDao = new FlightDao(em);
+        baggageDao = new BaggageDao(em, flightDao);
         initData();
         persistData();
     }
@@ -120,5 +136,5 @@ public abstract class CatalogueTest {
         flights = null;
         companies = null;
     }
+
 }
-*/

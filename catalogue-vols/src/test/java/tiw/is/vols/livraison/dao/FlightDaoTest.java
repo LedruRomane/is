@@ -1,17 +1,14 @@
-/*
 package tiw.is.vols.livraison.dao;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import tiw.is.vols.livraison.model.Company;
 import tiw.is.vols.livraison.model.Flight;
 
+import java.util.Collection;
+
 import static org.junit.jupiter.api.Assertions.*;
 
-class CatalogueFlightsTest extends CatalogueTest {
-
-*
-     * Testing EntityManager setup
-
+public class FlightDaoTest extends DataAccessObjectTest {
 
     @Test
     void testEMSetup() {
@@ -29,35 +26,26 @@ class CatalogueFlightsTest extends CatalogueTest {
         em.getTransaction().commit();
     }
 
-*
-     * Testing listing of flights
-
     @Test
     void getVols() {
-        Collection<Flight> cv = catalogueVol.getVols();
+        Collection<Flight> cv = flightDao.getAll();
         for (Flight v : flights) {
             assertTrue(cv.contains(v), () -> (v + " not in " + cv));
         }
     }
 
-
-@Test
+    @Test
     void getVol() {
-        assertEquals(flights[0], catalogueVol.getVol(flights[0].getId()));
-        assertNull(catalogueVol.getVol("v-"+testName+": je n'existe pas"));
+        assertEquals(flights[0], flightDao.getOneById(flights[0].getId()));
+        assertNull(flightDao.getOneById("v-"+testName+": je n'existe pas"));
     }
-
-
-*
-     * Test de sauvegarde d'un vol en base
-
 
     @Test
     void saveVol() {
         Company c = companies[0];
         Flight v = new Flight("vol-in-"+testName, c, "e");
         em.getTransaction().begin();
-        assertEquals(v, catalogueVol.saveVol(v));
+        assertEquals(v, flightDao.save(v));
         em.getTransaction().commit();
         em.getTransaction().begin();
         Flight v2 = em.find(Flight.class,v.getId());
@@ -70,13 +58,12 @@ class CatalogueFlightsTest extends CatalogueTest {
     void deleteVolById() {
         em.getTransaction().begin();
         Flight v = flights[0];
-        boolean deleted = catalogueVol.deleteVolById(v.getId());
+        boolean deleted = flightDao.deleteOneById(v.getId());
         em.getTransaction().commit();
         assertTrue(deleted);
         em.getTransaction().begin();
-        deleted = catalogueVol.deleteVolById(v.getId());
+        deleted = flightDao.deleteOneById(v.getId());
         em.getTransaction().commit();
         assertFalse(deleted);
     }
 }
-*/
