@@ -12,16 +12,13 @@ public class ServeurManager {
 
     public static Serveur serveur;
 
-
     @BeforeAll
     public static void setupClass() throws IOException {
         serveur = new ServeurImpl();
     }
 
-
     @BeforeEach
     public void setupDatabase() throws Exception {
         serveur.getContainer().getComponent(FixturesManager.class).resetDatabase();
     }
-
 }

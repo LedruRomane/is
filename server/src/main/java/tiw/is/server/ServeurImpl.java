@@ -4,7 +4,6 @@ import jakarta.json.Json;
 import jakarta.json.JsonArray;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonReader;
-import jakarta.persistence.EntityManager;
 import org.picocontainer.MutablePicoContainer;
 import org.picocontainer.PicoBuilder;
 import org.picocontainer.injectors.ConstructorInjection;
@@ -52,7 +51,8 @@ public class ServeurImpl implements Serveur {
             loadComponents(configJson.getJsonObject(app).getJsonArray("handlers-components"));
             loadComponents(configJson.getJsonObject(app).getJsonArray("commandbus-components"));
 
-            picoContainer.addComponent(new FixturesManager(picoContainer.getComponent(EntityManager.class)));
+            // Client test fixture manager.
+            picoContainer.addComponent(FixturesManager.class);
 
             LOG.info("---------------------------  [SERVER INFO: START]  ---------------------------");
             picoContainer.start();
