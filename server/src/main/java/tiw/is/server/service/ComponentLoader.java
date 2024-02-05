@@ -4,12 +4,16 @@ import jakarta.json.JsonArray;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonValue;
 import org.picocontainer.MutablePicoContainer;
+import tiw.is.vols.livraison.infrastructure.commandBus.ICommand;
 import tiw.is.vols.livraison.infrastructure.commandBus.ICommandHandler;
+import tiw.is.vols.livraison.infrastructure.commandBus.IMiddleware;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,6 +36,7 @@ public class ComponentLoader {
                 Object instance = method.invoke(factoryInstance);
 
                 picoContainer.addComponent(instance);
+
                 return;
             }
 
@@ -45,12 +50,13 @@ public class ComponentLoader {
                 }
 
                 picoContainer.addComponent(clazz, clazz.getConstructor(String.class, String.class, String.class, String.class).newInstance(constructorArgs));
+
                 return;
             }
 
             if (component.containsKey("type") && component.get("type").toString().equals("\"handler-locator\"")) {
                 // Instantiate the locator:
-                Map<Class, ICommandHandler> handlerLocator = new HashMap<>();
+                Map<Class, ICommandHandler<Object, ICommand>> handlerLocator = new HashMap<>();
                 JsonArray handlers =  component.getJsonArray("arguments");
 
                 for (JsonValue handler : handlers) {
@@ -61,6 +67,26 @@ public class ComponentLoader {
                     // Register the handler component in the locator:
                     handlerLocator.put(getCommandFromHandler(handlerClass), picoContainer.getComponent(handlerClass));
                 }
+                picoContainer.addComponent(handlerLocator);
+
+                return;
+            }
+
+            if (component.containsKey("middleware-components")) {
+                // Instantiate the collection
+                Collection<IMiddleware> middlware = new ArrayList<>();
+                JsonArray middlewares = component.getJsonArray("middleware-components");
+
+                for (JsonValue middleware : middlewares) {
+                    String rawMiddlewareClass = middleware.asJsonObject().getString("class-name");
+                    Class<IMiddleware> middlewareClass = (Class<IMiddleware>) Class.forName(rawMiddlewareClass);
+                    // Register the middleware in the container:
+                    picoContainer.addComponent(middlewareClass);
+                    // Register all middleware for commandBus:
+                    middlware.add(picoContainer.getComponent(middlewareClass));
+                }
+                // Register the CommandBus with all middleware in the container:
+                picoContainer.addComponent(clazz.getConstructor(Collection.class).newInstance(middlware));
 
                 return;
             }
@@ -72,10 +98,22 @@ public class ComponentLoader {
         }
     }
 
+    /**
+     * Récupère la Classe Command C associé au CommandHandler (ICommandHandler<R,C>).
+     * @param handlerClass Classe CommandHandler.
+     * @return Class Command.
+     * @throws ClassNotFoundException
+     */
     static Class getCommandFromHandler(Class<ICommandHandler> handlerClass) throws ClassNotFoundException {
         return Class.forName(getHandlerInterface(handlerClass).getActualTypeArguments()[1].getTypeName());
     }
 
+    /**
+     * Récupère le type CommandHandler parsé en ParameterizedType afin
+     * de le manipuler via les méthodes qui nous intéressent, cf. getCommandFromHandler.
+     * @param myClass CommandHandler class.
+     * @return ParameterizedType of CommandHandler class.
+     */
     static ParameterizedType getHandlerInterface(Class<?> myClass) {
         Type[] interfaces =  myClass.getGenericInterfaces();
         for (Type type : interfaces) {

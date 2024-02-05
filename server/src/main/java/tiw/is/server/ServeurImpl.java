@@ -34,34 +34,13 @@ import tiw.is.vols.livraison.infrastructure.command.service.flight.CloseShipment
 import tiw.is.vols.livraison.infrastructure.command.service.flight.GetLostBaggagesCommand;
 import tiw.is.vols.livraison.infrastructure.command.service.flight.GetUnclaimedBaggagesCommand;
 import tiw.is.vols.livraison.infrastructure.commandBus.*;
-import tiw.is.vols.livraison.infrastructure.handler.resource.baggage.CreateBaggageCommandHandler;
-import tiw.is.vols.livraison.infrastructure.handler.resource.baggage.DeleteBaggageCommandHandler;
-import tiw.is.vols.livraison.infrastructure.handler.resource.baggage.GetBaggageCommandHandler;
-import tiw.is.vols.livraison.infrastructure.handler.resource.baggage.GetBaggagesCommandHandler;
-import tiw.is.vols.livraison.infrastructure.handler.resource.company.CreateCompanyCommandHandler;
 import tiw.is.server.utils.JsonFormatter;
-import tiw.is.vols.livraison.infrastructure.handler.resource.company.DeleteCompanyCommandHandler;
-import tiw.is.vols.livraison.infrastructure.handler.resource.company.GetCompaniesCommandHandler;
-import tiw.is.vols.livraison.infrastructure.handler.resource.company.GetCompanyCommandHandler;
-import tiw.is.vols.livraison.infrastructure.handler.resource.flight.CreateOrUpdateFlightCommandHandler;
-import tiw.is.vols.livraison.infrastructure.handler.resource.flight.DeleteFlightCommandHandler;
-import tiw.is.vols.livraison.infrastructure.handler.resource.flight.GetFlightCommandHandler;
-import tiw.is.vols.livraison.infrastructure.handler.resource.flight.GetFlightsCommandHandler;
-import tiw.is.vols.livraison.infrastructure.handler.service.baggage.DeliverBaggageCommandHandler;
-import tiw.is.vols.livraison.infrastructure.handler.service.baggage.RetrievalBaggageCommandHandler;
-import tiw.is.vols.livraison.infrastructure.handler.service.flight.CloseShipmentCommandHandler;
-import tiw.is.vols.livraison.infrastructure.handler.service.flight.GetLostBaggagesCommandHandler;
-import tiw.is.vols.livraison.infrastructure.handler.service.flight.GetUnclaimedBaggagesCommandHandler;
-
 import java.io.IOException;
 import java.io.StringReader;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
 
 public class ServeurImpl implements Serveur {
@@ -94,17 +73,7 @@ public class ServeurImpl implements Serveur {
             loadComponents(configJson.getJsonObject(app).getJsonArray("persistence-components"));
             loadComponents(configJson.getJsonObject(app).getJsonArray("data-components"));
             loadComponents(configJson.getJsonObject(app).getJsonArray("handlers-components"));
-            loadComponents(configJson.getJsonObject(app).getJsonArray("middleware-components"));
-
-            // Create middleware queue we need for commandbus :
-            Collection<IMiddleware> middleware = new ArrayList<>();
-            middleware.add(picoContainer.getComponent(TransactionMiddleware.class));
-            middleware.add(picoContainer.getComponent(HandlerMiddleware.class));
-
-            // Create the command bus service and register it.-
-            picoContainer.addComponent(new CommandBus(middleware));
-
-            // todo: end.
+            loadComponents(configJson.getJsonObject(app).getJsonArray("commandbus-components"));
 
             LOG.info("---------------------------  [SERVER INFO: START]  ---------------------------");
             picoContainer.start();

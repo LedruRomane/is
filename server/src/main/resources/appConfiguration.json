@@ -26,15 +26,23 @@
         ]
       }
     ],
+
     "data-components": [
       {"class-name": "tiw.is.vols.livraison.dao.BaggageDao"},
       {"class-name": "tiw.is.vols.livraison.dao.CompanyDao"},
       {"class-name": "tiw.is.vols.livraison.dao.FlightDao"}
     ],
-    "middleware-components": [
-      {"class-name":  "tiw.is.vols.livraison.infrastructure.commandBus.TransactionMiddleware"},
-      {"class-name":  "tiw.is.vols.livraison.infrastructure.commandBus.HandlerMiddleware"}
+
+    "commandbus-components": [
+      {
+        "class-name": "tiw.is.vols.livraison.infrastructure.commandBus.CommandBus",
+        "middleware-components": [
+          {"class-name":  "tiw.is.vols.livraison.infrastructure.commandBus.TransactionMiddleware"},
+          {"class-name":  "tiw.is.vols.livraison.infrastructure.commandBus.HandlerMiddleware"}
+        ]
+      }
     ],
+
     "persistence-components": [
       {"class-name": "tiw.is.vols.livraison.db.PersistenceManager",
         "params": [{
