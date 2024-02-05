@@ -112,8 +112,13 @@ public class ComponentLoader {
      * @return Class Command.
      * @throws ClassNotFoundException
      */
-    static Class getCommandFromHandler(Class<ICommandHandler> handlerClass) throws ClassNotFoundException {
-        return Class.forName(getHandlerInterface(handlerClass).getActualTypeArguments()[1].getTypeName());
+    static Class getCommandFromHandler(Class<ICommandHandler> handlerClass) throws ClassNotFoundException, NullPointerException {
+        ParameterizedType handlerInterface = getHandlerInterface(handlerClass);
+        if (handlerInterface == null) {
+            throw new NullPointerException("Handler interface is null");
+        }
+        Type[] handlerClassTypes = handlerInterface.getActualTypeArguments();
+        return Class.forName(handlerClassTypes[1].getTypeName());
     }
 
     /**

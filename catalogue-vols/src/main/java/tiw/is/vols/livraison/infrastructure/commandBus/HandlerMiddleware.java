@@ -11,11 +11,6 @@ public class HandlerMiddleware implements IMiddleware {
 
     @Override
     public Object handle(ICommand command, IMiddleware next) throws Exception {
-        throw new IllegalAccessException("Unexpected call");
-    }
-
-    @Override
-    public Object handle(ICommand command) throws Exception {
         ICommandHandler<Object, ICommand> handler = handlerLocator.get(command.getClass());
         return handler.handle(command);
     }

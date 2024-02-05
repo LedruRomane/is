@@ -30,7 +30,7 @@ public class CommandBus<R, C extends ICommand> {
             if (iterator.hasNext()) {
                 return current.handle(command, iterator.next());
             }
-            return current.handle(command);
+            return current.handle(command, null);
 
         } catch (Exception e) {
             throw e;

@@ -21,7 +21,7 @@ public class TransactionMiddleware implements IMiddleware {
         em.getTransaction().begin();
 
         try {
-            return next.handle(command);
+            return next.handle(command, null);
         } catch (Exception e) {
             em.getTransaction().rollback();
             throw e;
@@ -30,15 +30,5 @@ public class TransactionMiddleware implements IMiddleware {
                 em.getTransaction().commit();
             }
         }
-    }
-
-    /**
-     * Transaction Middleware can't be the leaf middleware.
-     * @param command
-     * @throws Exception
-     */
-    @Override
-    public Object handle(ICommand command) throws Exception {
-        throw new IllegalAccessException("Unexpected call");
     }
 }
