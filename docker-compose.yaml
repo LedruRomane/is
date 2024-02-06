@@ -1,9 +1,12 @@
 services:
   postgres-db:
     image: postgres:16
+    restart: always
     environment:
       POSTGRES_PASSWORD: catalogue-mdp
       POSTGRES_USER: catalogue
       POSTGRES_DB: catalogue-db
     ports:
       - "5432:5432"
+    volumes:
+      - ./server/init.sql:/docker-entrypoint-initdb.d/init.sql

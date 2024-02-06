@@ -1,0 +1,79 @@
+{
+  "application-config": {
+    "name": "Livraison bagages",
+    "handlers-components": [
+      {
+        "class-name": "tiw.is.server.commandBus.ICommandHandler",
+        "type": "handler-locator",
+        "arguments": [
+          {"class-name": "tiw.is.vols.livraison.handler.resource.baggage.CreateBaggageCommandHandler"},
+          {"class-name": "tiw.is.vols.livraison.handler.resource.baggage.DeleteBaggageCommandHandler"},
+          {"class-name": "tiw.is.vols.livraison.handler.resource.baggage.GetBaggageCommandHandler"},
+          {"class-name": "tiw.is.vols.livraison.handler.resource.baggage.GetBaggagesCommandHandler"},
+          {"class-name": "tiw.is.vols.livraison.handler.resource.company.CreateCompanyCommandHandler"},
+          {"class-name": "tiw.is.vols.livraison.handler.resource.company.DeleteCompanyCommandHandler"},
+          {"class-name": "tiw.is.vols.livraison.handler.resource.company.GetCompaniesCommandHandler"},
+          {"class-name": "tiw.is.vols.livraison.handler.resource.company.GetCompanyCommandHandler"},
+          {"class-name": "tiw.is.vols.livraison.handler.resource.flight.CreateOrUpdateFlightCommandHandler"},
+          {"class-name": "tiw.is.vols.livraison.handler.resource.flight.DeleteFlightCommandHandler"},
+          {"class-name": "tiw.is.vols.livraison.handler.resource.flight.GetFlightCommandHandler"},
+          {"class-name": "tiw.is.vols.livraison.handler.resource.flight.GetFlightsCommandHandler"},
+          {"class-name": "tiw.is.vols.livraison.handler.service.baggage.DeliverBaggageCommandHandler"},
+          {"class-name": "tiw.is.vols.livraison.handler.service.baggage.RetrievalBaggageCommandHandler"},
+          {"class-name": "tiw.is.vols.livraison.handler.service.flight.CloseShipmentCommandHandler"},
+          {"class-name": "tiw.is.vols.livraison.handler.service.flight.GetLostBaggagesCommandHandler"},
+          {"class-name": "tiw.is.vols.livraison.handler.service.flight.GetUnclaimedBaggagesCommandHandler"}
+        ]
+      }
+    ],
+
+    "data-components": [
+      {"class-name": "tiw.is.vols.livraison.dao.BaggageDao"},
+      {"class-name": "tiw.is.vols.livraison.dao.CompanyDao"},
+      {"class-name": "tiw.is.vols.livraison.dao.FlightDao"}
+    ],
+
+    "commandbus-components": [
+      {
+        "class-name": "tiw.is.server.commandBus.CommandBus",
+        "middleware-components": [
+          {"class-name":  "tiw.is.server.commandBus.TransactionMiddleware"},
+          {"class-name":  "tiw.is.server.commandBus.HandlerMiddleware"}
+        ]
+      }
+    ],
+
+    "persistence-components": [
+      {"class-name": "tiw.is.vols.livraison.db.PersistenceManager",
+        "params": [{
+          "name": "DB_HOST",
+          "value": "localhost"
+        },
+          {
+            "name": "DB_NAME",
+            "value": "catalogue-db"
+          },
+          {
+            "name": "DB_USER",
+            "value": "catalogue"
+          },
+          {
+            "name": "DB_PASSWORD",
+            "value": "catalogue-mdp"
+          }]
+      },
+      {"class-name": "jakarta.persistence.EntityManagerFactory",
+        "factory-type": "tiw.is.vols.livraison.db.PersistenceManager",
+        "factory-method": "createEntityManagerFactory"
+      },
+      {"class-name": "jakarta.persistence.EntityManager",
+        "factory-type": "jakarta.persistence.EntityManagerFactory",
+        "factory-method": "createEntityManager"
+      }
+    ],
+
+    "dispatcher-components": [
+      {"class-name": "tiw.is.vols.livraison.Dispatcher"}
+    ]
+  }
+}
