@@ -12,26 +12,25 @@ import org.picocontainer.monitors.NullComponentMonitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import tiw.is.server.service.ComponentLoader;
-import tiw.is.server.service.Dispatcher;
+import tiw.is.server.service.IDispatcher;
 import tiw.is.server.utils.FixturesManager;
-import tiw.is.vols.livraison.exception.CommandNotFoundException;
 
 import java.io.IOException;
 import java.io.StringReader;
 import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.util.Map;
 
 public class ServeurImpl implements Serveur {
 
     private final MutablePicoContainer picoContainer;
-    private final static Logger LOG = LoggerFactory.getLogger(ServeurImpl.class);
+    private final Logger log = LoggerFactory.getLogger(ServeurImpl.class);
 
 
     /**
      * Constructor Server, implement container and provide services & components.
      */
-    public ServeurImpl() throws IOException {
+    public ServeurImpl(Path pathConfigurationFile) throws IOException {
         String app = "application-config";
         JsonObject configJson;
 
@@ -40,7 +39,7 @@ public class ServeurImpl implements Serveur {
                 .withLifecycle(new StartableLifecycleStrategy(new NullComponentMonitor()))
                 .build();
 
-        String configContent = new String(Files.readAllBytes(Paths.get("src/main/resources/appConfiguration.json")));
+        String configContent = new String(Files.readAllBytes(pathConfigurationFile));
 
         try (JsonReader reader = Json.createReader(new StringReader(configContent))) {
             configJson = reader.readObject();
@@ -49,12 +48,12 @@ public class ServeurImpl implements Serveur {
             loadComponents(configJson.getJsonObject(app).getJsonArray("data-components"));
             loadComponents(configJson.getJsonObject(app).getJsonArray("handlers-components"));
             loadComponents(configJson.getJsonObject(app).getJsonArray("commandbus-components"));
+            loadComponents(configJson.getJsonObject(app).getJsonArray("dispatcher-components"));
 
-            // Serveur's Services
+            // Functional tests database's fixture manager.
             picoContainer.addComponent(FixturesManager.class);
-            picoContainer.addComponent(Dispatcher.class);
 
-            LOG.info("---------------------------  [SERVER INFO: START]  ---------------------------");
+            log.info("---------------------------  [SERVER INFO: START]  ---------------------------");
             picoContainer.start();
         }
     }
@@ -78,17 +77,11 @@ public class ServeurImpl implements Serveur {
      */
     public Object processRequest(String resource, String command, Map<String, Object> params) {
         try {
-            Dispatcher dispatcher = picoContainer.getComponent(Dispatcher.class);
-            return switch (resource) {
-                case "company" -> dispatcher.dispatchCompanyResource(command, params);
-                case "flight" -> dispatcher.dispatchFlightResource(command, params);
-                case "baggage" -> dispatcher.dispatchBaggageResource(command, params);
-                case "flightBusiness", "baggagesBusiness" -> dispatcher.dispatch(command, params);
-                default -> throw new CommandNotFoundException(resource + " does not exist.");
-            };
+            IDispatcher dispatcher = picoContainer.getComponent(IDispatcher.class);
+            return dispatcher.dispatch(resource, command, params);
 
         } catch (Exception e) {
-            LOG.error(e.getMessage(), e);
+            log.error(e.getMessage(), e);
             return "KO"; // Simulate an http error return.
         }
     }

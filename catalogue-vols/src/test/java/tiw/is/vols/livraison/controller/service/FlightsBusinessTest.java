@@ -7,12 +7,12 @@ import tiw.is.vols.livraison.dao.DataAccessObjectTest;
 import tiw.is.vols.livraison.dto.BaggageDTO;
 import tiw.is.vols.livraison.dto.FlightDTO;
 import tiw.is.vols.livraison.exception.ResourceNotFoundException;
-import tiw.is.vols.livraison.infrastructure.command.service.flight.CloseShipmentCommand;
-import tiw.is.vols.livraison.infrastructure.command.service.flight.GetLostBaggagesCommand;
-import tiw.is.vols.livraison.infrastructure.command.service.flight.GetUnclaimedBaggagesCommand;
-import tiw.is.vols.livraison.infrastructure.handler.service.flight.CloseShipmentCommandHandler;
-import tiw.is.vols.livraison.infrastructure.handler.service.flight.GetLostBaggagesCommandHandler;
-import tiw.is.vols.livraison.infrastructure.handler.service.flight.GetUnclaimedBaggagesCommandHandler;
+import tiw.is.vols.livraison.command.service.flight.CloseShipmentCommand;
+import tiw.is.vols.livraison.command.service.flight.GetLostBaggagesCommand;
+import tiw.is.vols.livraison.command.service.flight.GetUnclaimedBaggagesCommand;
+import tiw.is.vols.livraison.handler.service.flight.CloseShipmentCommandHandler;
+import tiw.is.vols.livraison.handler.service.flight.GetLostBaggagesCommandHandler;
+import tiw.is.vols.livraison.handler.service.flight.GetUnclaimedBaggagesCommandHandler;
 import tiw.is.vols.livraison.model.Flight;
 
 import java.util.Collection;

@@ -4,9 +4,9 @@ import jakarta.json.JsonArray;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonValue;
 import org.picocontainer.MutablePicoContainer;
-import tiw.is.vols.livraison.infrastructure.commandBus.ICommand;
-import tiw.is.vols.livraison.infrastructure.commandBus.ICommandHandler;
-import tiw.is.vols.livraison.infrastructure.commandBus.IMiddleware;
+import tiw.is.server.commandBus.ICommand;
+import tiw.is.server.commandBus.ICommandHandler;
+import tiw.is.server.commandBus.IMiddleware;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -19,6 +19,10 @@ import java.util.Map;
 
 public class ComponentLoader {
 
+    //todo: systeme de pass (pass Interface dans serveur).
+    // 1 implem conrete pass dédié pour charger les types de services
+    // 1 pour charger spécifiquement le handlerLocator.
+    // prends un tableau de pass
     private ComponentLoader() {}
 
     /**
@@ -107,6 +111,7 @@ public class ComponentLoader {
     }
 
     /**
+     * [Java reflection]
      * Récupère la classe Command C associé au CommandHandler (ICommandHandler<R,C>).
      * @param handlerClass Classe CommandHandler.
      * @return Class Command.
@@ -122,6 +127,7 @@ public class ComponentLoader {
     }
 
     /**
+     * [Java reflection]
      * Récupère le type CommandHandler parsé en ParameterizedType afin
      * de le manipuler et récupérer ses arguments. cf. getCommandFromHandler.
      * @param myClass CommandHandler class.

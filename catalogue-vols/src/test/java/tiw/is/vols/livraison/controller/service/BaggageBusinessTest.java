@@ -6,10 +6,10 @@ import org.junit.jupiter.api.TestInfo;
 import tiw.is.vols.livraison.dao.DataAccessObjectTest;
 import tiw.is.vols.livraison.dto.BaggageDTO;
 import tiw.is.vols.livraison.exception.ResourceNotFoundException;
-import tiw.is.vols.livraison.infrastructure.command.service.baggage.DeliverBaggageCommand;
-import tiw.is.vols.livraison.infrastructure.command.service.baggage.RetrievalBaggageCommand;
-import tiw.is.vols.livraison.infrastructure.handler.service.baggage.DeliverBaggageCommandHandler;
-import tiw.is.vols.livraison.infrastructure.handler.service.baggage.RetrievalBaggageCommandHandler;
+import tiw.is.vols.livraison.command.service.baggage.DeliverBaggageCommand;
+import tiw.is.vols.livraison.command.service.baggage.RetrievalBaggageCommand;
+import tiw.is.vols.livraison.handler.service.baggage.DeliverBaggageCommandHandler;
+import tiw.is.vols.livraison.handler.service.baggage.RetrievalBaggageCommandHandler;
 
 import static org.junit.jupiter.api.Assertions.*;
 

@@ -6,6 +6,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import tiw.is.vols.livraison.dao.FlightDao;
+import tiw.is.vols.livraison.db.PersistenceManager;
 import tiw.is.vols.livraison.model.Company;
 import tiw.is.vols.livraison.model.Flight;
 

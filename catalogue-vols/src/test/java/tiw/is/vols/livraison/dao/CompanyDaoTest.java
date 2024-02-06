@@ -1,5 +1,6 @@
 package tiw.is.vols.livraison.dao;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import tiw.is.vols.livraison.model.Company;
 
@@ -48,7 +49,7 @@ class CompanyDaoTest  extends DataAccessObjectTest {
         em.getTransaction().begin();
         var d = companyDao.deleteOneById(id);
         em.getTransaction().commit();
-        assertTrue(d);
+        Assertions.assertTrue(d);
         em.getTransaction().begin();
         assertFalse(companyDao.deleteOneById(id));
         em.getTransaction().commit();

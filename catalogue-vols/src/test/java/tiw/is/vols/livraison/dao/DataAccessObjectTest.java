@@ -3,6 +3,9 @@ package tiw.is.vols.livraison.dao;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import org.junit.jupiter.api.*;
+import tiw.is.vols.livraison.dao.BaggageDao;
+import tiw.is.vols.livraison.dao.CompanyDao;
+import tiw.is.vols.livraison.dao.FlightDao;
 import tiw.is.vols.livraison.db.PersistenceManager;
 import tiw.is.vols.livraison.model.Baggage;
 import tiw.is.vols.livraison.model.Company;
@@ -14,7 +17,7 @@ public abstract class DataAccessObjectTest {
 
     private static EntityManagerFactory emf;
     protected EntityManager em;
-    protected  BaggageDao baggageDao;
+    protected BaggageDao baggageDao;
     protected CompanyDao companyDao;
     protected FlightDao flightDao;
     protected String testName;
